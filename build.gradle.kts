@@ -12,7 +12,8 @@ allprojects {
 
     repositories {
         mavenCentral()
-        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://hub.spigotmc.org/nexus/content/groups/public/")
+        maven("https://oss.sonatype.org/content/groups/public/")
         maven("https://nexus.velocitypowered.com/repository/maven-public/")
     }
 }
@@ -24,6 +25,8 @@ subprojects {
 
     dependencies {
         implementation("org.jetbrains:annotations:23.0.0")
+
+        compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
     }
 
     tasks.withType<JavaCompile> {
