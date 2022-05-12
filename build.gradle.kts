@@ -25,8 +25,10 @@ subprojects {
 
     dependencies {
         implementation("org.jetbrains:annotations:23.0.0")
+        implementation("com.google.inject:guice:4.0")
 
         compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
+        testCompileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
     }
 
     tasks.withType<JavaCompile> {
