@@ -1,21 +1,10 @@
 package net.bote.gamecore.api;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import net.bote.gamecore.api.game.GameProvider;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class GamePlugin extends JavaPlugin {
+public interface GamePlugin {
 
-    @Override
-    public final void onLoad() {
+    @NotNull GameProvider gameProvider();
 
-    }
-
-    @Override
-    public final void onEnable() {
-
-    }
-
-    @Override
-    public final void onDisable() {
-
-    }
 }
