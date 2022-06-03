@@ -1,4 +1,4 @@
-package net.bote.gamecore.api.team;
+package net.bote.gamecore.components.team;
 
 import org.jetbrains.annotations.NotNull;
 

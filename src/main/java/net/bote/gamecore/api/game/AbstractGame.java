@@ -3,9 +3,8 @@ package net.bote.gamecore.api.game;
 import com.google.gson.annotations.Expose;
 import net.bote.gamecore.GamePlugin;
 import net.bote.gamecore.api.Creatable;
-import net.bote.gamecore.api.feature.Feature;
 import net.bote.gamecore.api.phase.Phase;
-import net.bote.gamecore.api.team.Team;
+import net.bote.gamecore.components.team.Team;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
