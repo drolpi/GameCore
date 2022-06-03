@@ -40,18 +40,18 @@ public abstract class AbstractPhase implements Phase, Creatable {
         return null;
     }
 
-
-    @Override
-    public @NotNull String type() {
-        return this.type;
-    }
-
     public void setAllowJoin(boolean allowJoin) {
         this.allowJoin = allowJoin;
     }
 
     public void setAllowSpectate(boolean allowSpectate) {
         this.allowSpectate = allowSpectate;
+    }
+
+
+    @Override
+    public @NotNull String type() {
+        return this.type;
     }
 
     @Override

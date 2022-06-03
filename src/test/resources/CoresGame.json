@@ -1,6 +1,17 @@
 {
     "type": "CoresGame",
     "value": 0,
+    "teamSize": 4,
+    "teams": [
+        {
+            "name": "Red",
+            "color": "RED"
+        },
+        {
+            "name": "Blue",
+            "color": "BLUE"
+        }
+    ],
     "phases": [
         {
             "type": "LobbyPhase",
