@@ -15,6 +15,7 @@
     "phases": [
         {
             "type": "LobbyPhase",
+            "minPlayers": 3,
             "features": [
                 {
                     "type": "GameModeFeature",

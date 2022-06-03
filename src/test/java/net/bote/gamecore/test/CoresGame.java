@@ -23,11 +23,12 @@ final class CoresGame extends AbstractGame {
     public void create() {
         this.value = 100;
 
-        this.setTeamSize(4);
+        this.setTeamSize(2);
         this.addTeam(Team.of("Red", TeamColor.RED));
         this.addTeam(Team.of("Blue", TeamColor.BLUE));
 
         LobbyPhase lobbyPhase = this.addPhase(LobbyPhase.class);
+        lobbyPhase.setMinPlayers(3);
 
         InGamePhase inGamePhase = this.addPhase(InGamePhase.class);
     }
