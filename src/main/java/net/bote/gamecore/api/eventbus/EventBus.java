@@ -21,8 +21,15 @@ public interface EventBus {
 
     void unregisterIf(@NotNull Predicate<EventListener<?>> predicate);
 
-    boolean listening(@NotNull EventListener<?> type);
+    boolean has(@NotNull EventListener<?> type);
 
     void call(@NotNull Object event);
+
+    default void callCancellable(@NotNull Object event, @NotNull Runnable callback) {
+        this.call(event);
+        if (event instanceof CancellableEvent && ((CancellableEvent) event).isCancelled())
+            return;
+        callback.run();
+    }
 
 }

@@ -33,7 +33,7 @@ final class EventBusImpl implements EventBus {
     }
 
     @Override
-    public boolean listening(@NotNull EventListener<?> listener) {
+    public boolean has(@NotNull EventListener<?> listener) {
         for (Map.Entry<Class, EventListener> entry : this.listeners) {
             if (entry.getValue().equals(listener))
                 return true;

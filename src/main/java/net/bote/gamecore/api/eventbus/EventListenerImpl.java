@@ -26,16 +26,16 @@ final class EventListenerImpl<T> implements EventListener<T> {
 
     @Override
     public void handle(@NotNull T event) {
-        if(!this.conditions.isEmpty()) {
-            for(Predicate<T> condition : this.conditions) {
-                if(!condition.test(event)) {
+        if (!this.conditions.isEmpty()) {
+            for (Predicate<T> condition : this.conditions) {
+                if (!condition.test(event))
                     return;
-                }
             }
         }
 
-        if(this.handler != null)
-            this.handler.accept(event);
+        if (this.handler == null)
+            return;
+        this.handler.accept(event);
     }
 
     static final class BuilderImpl<T> implements EventListener.Builder<T> {
