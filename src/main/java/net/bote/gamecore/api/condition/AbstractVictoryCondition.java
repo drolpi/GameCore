@@ -1,10 +1,10 @@
 package net.bote.gamecore.api.condition;
 
 import com.google.gson.annotations.Expose;
-import net.bote.gamecore.api.game.GameInstance;
+import net.bote.gamecore.api.Creatable;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractVictoryCondition implements VictoryCondition {
+public abstract class AbstractVictoryCondition implements VictoryCondition, Creatable {
 
     @Expose
     private final String type;
@@ -12,10 +12,6 @@ public abstract class AbstractVictoryCondition implements VictoryCondition {
     public AbstractVictoryCondition() {
         this.type = this.getClass().getName().replace("VictoryConditionTypeAdapter.DEFAULT_PATH" + ".", "");
     }
-
-    public abstract void create();
-
-    public abstract void enable(@NotNull GameInstance gameInstance);
 
     @Override
     public @NotNull String type() {

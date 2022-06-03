@@ -1,15 +1,14 @@
 package net.bote.gamecore.api.game;
 
-import net.bote.gamecore.api.condition.VictoryCondition;
 import com.google.gson.annotations.Expose;
-import net.bote.gamecore.api.feature.Feature;
+import net.bote.gamecore.api.Creatable;
 import net.bote.gamecore.api.phase.Phase;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractGame implements Game {
+public abstract class AbstractGame implements Game, Creatable {
 
     @Expose
     private final String type;
@@ -21,8 +20,6 @@ public abstract class AbstractGame implements Game {
         this.type = this.getClass().getName().replace("GameTypeAdapter.DEFAULT_PATH" + ".", "");
         this.phases = new ArrayList<>();
     }
-
-    public abstract void create();
 
     @Override
     public @NotNull String type() {

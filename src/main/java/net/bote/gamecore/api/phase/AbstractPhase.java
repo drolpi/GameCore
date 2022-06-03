@@ -1,6 +1,7 @@
 package net.bote.gamecore.api.phase;
 
 import com.google.gson.annotations.Expose;
+import net.bote.gamecore.api.Creatable;
 import net.bote.gamecore.api.condition.VictoryCondition;
 import net.bote.gamecore.api.feature.Feature;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class AbstractPhase implements Phase {
+public abstract class AbstractPhase implements Phase, Creatable {
 
     @Expose
     private final String type;
@@ -30,8 +31,6 @@ public abstract class AbstractPhase implements Phase {
         this.features = new HashSet<>();
         this.victoryConditions = new HashSet<>();
     }
-
-    public abstract void create();
 
     public <T extends Feature> T addFeature(Class<? extends T> type) {
         return null;
