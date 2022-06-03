@@ -1,0 +1,30 @@
+{
+    "type": "CoresGame",
+    "value": 0,
+    "phases": [
+        {
+            "type": "LobbyPhase",
+            "features": [
+                {
+                    "type": "GameModeFeature",
+                    "gameMode": "ADVENTURE"
+                }
+            ],
+            "victoryConditions": []
+        },
+        {
+            "type": "InGamePhase",
+            "features": [
+                {
+                    "type": "GameModeFeature",
+                    "gameMode": "SURVIVAL"
+                }
+            ],
+            "victoryConditions": [
+                {
+                    "type": "TestVictoryCondition"
+                }
+            ]
+        }
+    ]
+}
