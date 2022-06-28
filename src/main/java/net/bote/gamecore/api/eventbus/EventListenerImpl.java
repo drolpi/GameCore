@@ -26,6 +26,10 @@ final class EventListenerImpl<T> implements EventListener<T> {
 
     @Override
     public void handle(@NotNull T event) {
+        if (event instanceof CancellableEvent && ((CancellableEvent) event).isCancelled()) {
+            return;
+        }
+
         if (!this.conditions.isEmpty()) {
             for (Predicate<T> condition : this.conditions) {
                 if (!condition.test(event))
