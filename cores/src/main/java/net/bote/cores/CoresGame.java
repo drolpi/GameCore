@@ -1,3 +1,5 @@
+package net.bote.cores;
+
 import com.google.gson.annotations.Expose;
 import net.bote.gamecore.GamePlugin;
 import net.bote.gamecore.api.game.AbstractGame;
@@ -7,7 +9,7 @@ import net.bote.gamecore.components.team.Team;
 import net.bote.gamecore.components.team.TeamColor;
 import org.jetbrains.annotations.NotNull;
 
-@GameInfo(name = "CoresGame", description = "The Cores Game", version = "2.0.0-SNAPSHOT", authors = {"bote100", "dasdrolpi"})
+@GameInfo(name = "net.bote.cores.CoresGame", description = "The Cores Game", version = "2.0.0-SNAPSHOT", authors = {"bote100", "dasdrolpi"})
 final class CoresGame extends AbstractGame {
 
     @Expose

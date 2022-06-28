@@ -22,6 +22,7 @@ final class TaskHandlerImpl implements TaskHandler {
         for (LifeCycle moduleLifeCycle : LifeCycle.values()) {
             this.tasks.put(moduleLifeCycle, new CopyOnWriteArrayList<>());
         }
+        this.findMethods();
     }
 
     @Override

@@ -1,3 +1,5 @@
+package net.bote.cores;
+
 import net.bote.gamecore.api.condition.VictoryCondition;
 import net.bote.gamecore.api.condition.def.TestVictoryCondition;
 import net.bote.gamecore.api.feature.def.GameModeFeature;
