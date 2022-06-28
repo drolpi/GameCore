@@ -6,25 +6,33 @@ plugins {
 
 defaultTasks("build", "shadowJar")
 
-group = "de.natrox"
-version = "1.0.0-SNAPSHOT"
+allprojects {
+    group = "net.bote"
+    version = "1.0.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-    maven("https://papermc.io/repo/repository/maven-public/")
-    maven("https://nexus.velocitypowered.com/repository/maven-public/")
+    repositories {
+        mavenCentral()
+        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://nexus.velocitypowered.com/repository/maven-public/")
+    }
 }
 
-dependencies {
-    implementation("org.jetbrains:annotations:23.0.0")
-    implementation("com.google.inject:guice:4.0")
-    implementation("com.google.code.gson:gson:2.9.0")
+subprojects {
+    apply(plugin = "java")
+    apply(plugin = "maven-publish")
+    apply(plugin = "com.github.johnrengelman.shadow")
 
-    compileOnly("com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT")
-    testCompileOnly("com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT")
-}
+    dependencies {
+        implementation("org.jetbrains:annotations:23.0.0")
+        implementation("com.google.inject:guice:4.0")
+        implementation("com.google.code.gson:gson:2.9.0")
 
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-    options.isIncremental = true
+        compileOnly("com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT")
+        testCompileOnly("com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT")
+    }
+
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        options.isIncremental = true
+    }
 }

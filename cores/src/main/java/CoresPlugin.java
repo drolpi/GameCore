@@ -1,5 +1,3 @@
-package net.bote.gamecore.test;
-
 import net.bote.gamecore.AbstractGamePlugin;
 import net.bote.gamecore.PluginInfo;
 import net.bote.gamecore.api.game.GameController;

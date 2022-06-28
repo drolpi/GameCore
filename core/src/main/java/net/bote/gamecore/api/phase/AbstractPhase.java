@@ -1,8 +1,8 @@
 package net.bote.gamecore.api.phase;
 
 import com.google.gson.annotations.Expose;
-import net.bote.gamecore.api.Creatable;
 import net.bote.gamecore.api.condition.VictoryCondition;
+import net.bote.gamecore.api.Creatable;
 import net.bote.gamecore.api.feature.Feature;
 import org.jetbrains.annotations.NotNull;
 

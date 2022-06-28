@@ -1,8 +1,8 @@
 package net.bote.gamecore;
 
+import net.bote.gamecore.api.task.TaskHandler;
 import net.bote.gamecore.api.game.GameController;
 import net.bote.gamecore.api.task.LifeCycle;
-import net.bote.gamecore.api.task.TaskHandler;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;

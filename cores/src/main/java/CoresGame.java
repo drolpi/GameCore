@@ -1,5 +1,3 @@
-package net.bote.gamecore.test;
-
 import com.google.gson.annotations.Expose;
 import net.bote.gamecore.GamePlugin;
 import net.bote.gamecore.api.game.AbstractGame;
