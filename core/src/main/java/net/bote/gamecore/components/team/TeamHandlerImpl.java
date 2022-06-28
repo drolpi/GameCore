@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-final class TeamHandlerImpl implements TeamHandler {
+public final class TeamHandlerImpl implements TeamHandler {
 
     private final Map<String, TeamInstance> teams;
 
