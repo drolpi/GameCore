@@ -2,7 +2,7 @@ rootProject.name = "GameCore"
 
 include(
     ":core",
-    ":cores",
-    ":skywars",
-    ":bedwars"
+    ":game-cores",
+    ":game-skywars",
+    ":game-bedwars"
 )
