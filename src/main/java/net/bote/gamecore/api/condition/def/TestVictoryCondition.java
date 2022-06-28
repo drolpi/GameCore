@@ -1,8 +1,6 @@
 package net.bote.gamecore.api.condition.def;
 
 import net.bote.gamecore.api.condition.AbstractVictoryCondition;
-import net.bote.gamecore.api.game.GameInstance;
-import org.jetbrains.annotations.NotNull;
 
 public class TestVictoryCondition extends AbstractVictoryCondition {
 
@@ -12,11 +10,6 @@ public class TestVictoryCondition extends AbstractVictoryCondition {
 
     @Override
     public void create() {
-
-    }
-
-    @Override
-    public void enable(@NotNull GameInstance gameInstance) {
 
     }
 }

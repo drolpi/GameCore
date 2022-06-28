@@ -37,8 +37,7 @@ public abstract class AbstractGamePlugin extends JavaPlugin implements GamePlugi
     }
 
     @Override
-    public @NotNull
-    final GameController gameController() {
+    public @NotNull final GameController gameController() {
         return this.gameController;
     }
 }
