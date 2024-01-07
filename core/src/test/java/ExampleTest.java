@@ -22,10 +22,6 @@ public class ExampleTest {
 
         B b = first.getInstance(B.class);
 
-        for (Map.Entry<Key<?>, Binding<?>> entry : first.getAllBindings().entrySet()) {
-            System.out.println(entry.getValue().toString());
-        }
-
         Injector child = first.createChildInjector();
         Injector child2 = first.createChildInjector();
         Injector injector = child.getInstance(Injector.class);

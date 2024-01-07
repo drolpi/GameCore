@@ -7,7 +7,7 @@ plugins {
 defaultTasks("build", "shadowJar")
 
 allprojects {
-    group = "net.bote"
+    group = "de.drolpi"
     version = "1.0.0-SNAPSHOT"
 
     repositories {

@@ -1,7 +1,6 @@
 name: SkyWars
 description: The SkyWars plugin
-version: 3.0.0-SNAPSHOT
+version: 1.0.0-SNAPSHOT
 authors:
-    - bote100
     - dasdrolpi
-main: net.bote.skywars.SkyWarsPlugin
+main: de.drolpi.skywars.SkyWarsPlugin

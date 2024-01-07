@@ -1,0 +1,5 @@
+{
+	"prefix": "<dark_gray>» <green>SkyWars <dark_gray>×</dark_gray> ",
+	"lobby.player.join": "<key:prefix><yellow><playername> <gray>hat das Spiel <green>betreten",
+    "lobby.player.quit": "<yellow><playername> <gray>hat das Spiel <red>verlassen"
+}
