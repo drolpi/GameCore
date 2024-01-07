@@ -1,20 +1,17 @@
 package net.bote.gamecore.api.feature;
 
-import com.google.gson.annotations.Expose;
-import net.bote.gamecore.api.GameInstanceService;
-import org.jetbrains.annotations.NotNull;
+import com.google.inject.Singleton;
+import net.bote.gamecore.api.AbstractIdentifiable;
+import org.bukkit.event.Listener;
 
-public abstract class AbstractFeature implements Feature, GameInstanceService {
-
-    @Expose
-    private final String type;
+@Singleton
+public abstract class AbstractFeature extends AbstractIdentifiable implements Feature, Listener {
 
     public AbstractFeature() {
-        this.type = this.getClass().getName().replace("FeatureTypeAdapter.DEFAULT_PATH" + ".", "");
+
     }
 
-    @Override
-    public @NotNull String type() {
-        return this.type;
-    }
+    public abstract void enable();
+
+    public abstract void disable();
 }

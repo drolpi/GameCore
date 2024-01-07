@@ -1,9 +1,11 @@
 package net.bote.gamecore.api.condition;
 
-import org.jetbrains.annotations.NotNull;
+import net.bote.gamecore.components.team.TeamInstance;
 
 public interface VictoryCondition {
 
-    @NotNull String type();
+    boolean completed();
+
+    TeamInstance winner();
 
 }

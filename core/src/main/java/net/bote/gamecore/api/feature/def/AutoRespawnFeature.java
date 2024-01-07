@@ -1,33 +1,26 @@
 package net.bote.gamecore.api.feature.def;
 
-import net.bote.gamecore.api.eventbus.EventBus;
-import net.bote.gamecore.api.eventbus.EventListener;
+import com.google.inject.Inject;
 import net.bote.gamecore.api.feature.AbstractFeature;
-import net.bote.gamecore.api.feature.FeatureInfo;
-import net.bote.gamecore.api.game.GameInstance;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.jetbrains.annotations.NotNull;
+import net.bote.gamecore.api.phase.Phase;
+import org.bukkit.GameRule;
 
-@FeatureInfo(name = "AutoRespawnFeature", description = "Makes dead players respawn automatically", version = "1.0", authors = "dasdrolpi")
 public class AutoRespawnFeature extends AbstractFeature {
 
-    private final EventListener<PlayerDeathEvent> deathListener;
+    private final MapFeature mapFeature;
 
-    public AutoRespawnFeature() {
-        this.deathListener = EventListener.of(PlayerDeathEvent.class, event -> event.getEntity().spigot().respawn());
+    @Inject
+    public AutoRespawnFeature(Phase phase) {
+        this.mapFeature = phase.feature(MapFeature.class);
     }
 
     @Override
-    public void enable(@NotNull GameInstance gameInstance) {
-        EventBus eventBus = gameInstance.eventBus();
-
-        eventBus.register(this.deathListener);
+    public void enable() {
+        this.mapFeature.world().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
     }
 
     @Override
-    public void disable(@NotNull GameInstance gameInstance) {
-        EventBus eventBus = gameInstance.eventBus();
-
-        eventBus.unregister(this.deathListener);
+    public void disable() {
+        this.mapFeature.world().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, false);
     }
 }

@@ -1,29 +1,29 @@
 package net.bote.gamecore.components.team;
 
+import net.bote.gamecore.components.team.config.Team;
+import net.bote.gamecore.components.team.config.TeamColor;
 import org.jetbrains.annotations.NotNull;
 
-final class TeamInstanceImpl implements TeamInstance {
+public final class TeamInstanceImpl implements TeamInstance {
 
-    private final String name;
-    private final TeamColor color;
+    private final Team team;
     private final int maxPlayers;
     private final TeamPlayers teamPlayers;
 
-    public TeamInstanceImpl(String name, TeamColor color, int maxPlayers) {
-        this.name = name;
-        this.color = color;
+    public TeamInstanceImpl(Team team, int maxPlayers) {
+        this.team = team;
         this.maxPlayers = maxPlayers;
         this.teamPlayers = new TeamPlayersImpl(this);
     }
 
     @Override
     public @NotNull String name() {
-        return this.name;
+        return this.team.name();
     }
 
     @Override
     public @NotNull TeamColor color() {
-        return this.color;
+        return this.team.color();
     }
 
     @Override

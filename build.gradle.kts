@@ -12,7 +12,8 @@ allprojects {
 
     repositories {
         mavenCentral()
-        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://nexus.velocitypowered.com/repository/maven-public/")
     }
 }
@@ -24,15 +25,18 @@ subprojects {
 
     dependencies {
         implementation("org.jetbrains:annotations:23.0.0")
-        implementation("com.google.inject:guice:4.0")
-        implementation("com.google.code.gson:gson:2.9.0")
+        implementation("com.google.inject:guice:6.0.0")
+        implementation("com.google.code.gson:gson:2.10.1")
 
-        compileOnly("com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT")
-        testCompileOnly("com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT")
+        compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     }
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
         options.isIncremental = true
     }
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }

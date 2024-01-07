@@ -2,8 +2,9 @@ package net.bote.skywars;
 
 import net.bote.gamecore.AbstractGamePlugin;
 import net.bote.gamecore.PluginInfo;
+import net.bote.gamecore.api.game.Game;
 import net.bote.gamecore.api.game.GameController;
-import net.bote.gamecore.api.game.GameInstance;
+import net.bote.gamecore.api.game.GameType;
 import net.bote.gamecore.api.task.LifeCycle;
 import net.bote.gamecore.api.task.Task;
 
@@ -13,14 +14,11 @@ public final class SkyWarsPlugin extends AbstractGamePlugin {
     @Task(event = LifeCycle.STARTED, order = 1)
     public void enable() {
         GameController gameController = this.gameController();
-
-        SkyWarsGame coresGame = gameController.createGame(SkyWarsGame.class);
-        GameInstance instance = gameController.startGame(coresGame);
+        gameController.createGameType(SkyWarsGame.class);
     }
 
     @Task(event = LifeCycle.STOPPED, order = 1)
     public void disable() {
 
     }
-
 }

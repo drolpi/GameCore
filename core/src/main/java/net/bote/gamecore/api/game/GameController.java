@@ -1,13 +1,17 @@
 package net.bote.gamecore.api.game;
 
-import net.bote.gamecore.api.phase.Phase;
+import net.bote.gamecore.api.player.GamePlayer;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 public interface GameController {
 
-    <T extends Game> @NotNull T createGame(@NotNull Class<? extends T> type);
+    GameType createGameType(@NotNull Class<? extends Game> type);
 
-    @NotNull GameInstance startGame(@NotNull Game game);
+    <T extends Game> @NotNull T startGame(@NotNull GameType gameType);
 
-    void startPhase(@NotNull GameInstance gameInstance, @NotNull Phase phase);
+    Set<Game> games(GamePlayer gamePlayer, boolean spectate);
+
+    Set<Game> games();
 }

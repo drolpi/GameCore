@@ -1,20 +1,33 @@
 package net.bote.gamecore.api.condition;
 
-import com.google.gson.annotations.Expose;
+import net.bote.gamecore.api.AbstractIdentifiable;
 import net.bote.gamecore.api.Creatable;
-import org.jetbrains.annotations.NotNull;
+import net.bote.gamecore.api.player.GamePlayer;
+import net.bote.gamecore.components.team.TeamInstance;
+import org.bukkit.event.Listener;
 
-public abstract class AbstractVictoryCondition implements VictoryCondition, Creatable {
+import java.util.HashSet;
+import java.util.Set;
 
-    @Expose
-    private final String type;
+public abstract class AbstractVictoryCondition extends AbstractIdentifiable implements VictoryCondition, Creatable, Listener {
+
+    protected TeamInstance winner;
 
     public AbstractVictoryCondition() {
-        this.type = this.getClass().getName().replace("VictoryConditionTypeAdapter.DEFAULT_PATH" + ".", "");
+
+    }
+
+    public abstract TeamInstance condition();
+
+    @Override
+    public boolean completed() {
+        this.winner = this.condition();
+
+        return this.winner != null;
     }
 
     @Override
-    public @NotNull String type() {
-        return this.type;
+    public TeamInstance winner() {
+        return this.winner;
     }
 }

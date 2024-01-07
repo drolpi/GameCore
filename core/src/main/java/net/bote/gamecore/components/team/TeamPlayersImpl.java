@@ -1,5 +1,6 @@
 package net.bote.gamecore.components.team;
 
+import net.bote.gamecore.api.player.GamePlayer;
 import net.bote.gamecore.components.team.result.AddResult;
 import net.bote.gamecore.components.team.result.AlreadyInTeamResult;
 import net.bote.gamecore.components.team.result.SuccessfulAddResult;
@@ -14,7 +15,7 @@ import java.util.WeakHashMap;
 final class TeamPlayersImpl implements TeamPlayers {
 
     private final TeamInstance team;
-    private final Set<Player> players;
+    private final Set<GamePlayer> players;
 
     public TeamPlayersImpl(TeamInstance team) {
         this.team = team;
@@ -27,7 +28,7 @@ final class TeamPlayersImpl implements TeamPlayers {
     }
 
     @Override
-    public @NotNull Set<Player> collect() {
+    public @NotNull Set<GamePlayer> collect() {
         return Collections.unmodifiableSet(this.players);
     }
 
@@ -37,12 +38,12 @@ final class TeamPlayersImpl implements TeamPlayers {
     }
 
     @Override
-    public boolean isTeamMate(@NotNull Player other) {
+    public boolean isTeamMate(@NotNull GamePlayer other) {
         return this.team != null && this.collect().contains(other);
     }
 
     @Override
-    public @NotNull AddResult add(@NotNull Player player) {
+    public @NotNull AddResult add(@NotNull GamePlayer player) {
         if (this.team.isFull()) {
             return new TeamFullResult(this.team);
         }
@@ -55,7 +56,7 @@ final class TeamPlayersImpl implements TeamPlayers {
     }
 
     @Override
-    public void remove(@NotNull Player player) {
+    public void remove(@NotNull GamePlayer player) {
         this.players.remove(player);
     }
 
