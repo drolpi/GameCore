@@ -19,8 +19,8 @@
     "ingame.counter_finish_message": "<key:prefix><gray>Das Spiel endet nun",
     "ingame.death_private": "<key:prefix><red>Du bist gestorben",
     "ingame.death_brodcast": "<key:prefix><yellow><playername> <gray>ist gestorben",
-    "ingame.death_killed_private": "<key:prefix><gray>Du wurdest von <yellow><killername> <gray>getötet",
+    "ingame.death_killed_private": "<key:prefix><red>Du wurdest von <yellow><killername> <red>getötet",
     "ingame.death_killed_brodcast": "<key:prefix><yellow><playername> <gray>wurde von <yellow><killername> <gray>getötet",
-    "ending.counter_tick_message": "<key:prefix><gray>Der Server restartet in <red><count> <gray><key:unit.seconds>",
-    "ending.counter_finish_message": "<key:prefix><gray>Der Server restartet nun"
+    "ending.counter_tick_message": "<key:prefix><gray>Der Server start in <red><count> <gray><key:unit.seconds> neu",
+    "ending.counter_finish_message": "<key:prefix><gray>Der Server startet nun neu"
 }
