@@ -3,19 +3,12 @@ package de.drolpi.gamecore.api.feature.def;
 import com.google.gson.annotations.Expose;
 import com.google.inject.Inject;
 import de.drolpi.gamecore.api.counter.Counter;
-import de.drolpi.gamecore.api.counter.HandlerType;
-import de.drolpi.gamecore.api.feature.AbstractFeature;
 import de.drolpi.gamecore.api.game.Game;
 import de.drolpi.gamecore.api.phase.Phase;
 import de.drolpi.gamecore.api.player.GamePlayer;
-import it.unimi.dsi.fastutil.ints.IntArraySet;
-import it.unimi.dsi.fastutil.ints.IntSet;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import org.bukkit.Sound;
-
-import java.util.function.Consumer;
 
 public class MessageCounterFeature extends AbstractCounterHandlerFeature {
 
@@ -58,7 +51,7 @@ public class MessageCounterFeature extends AbstractCounterHandlerFeature {
                 allPlayer.sendMessage(
                     Component.translatable(this.phase.key() + ".counter_tick"),
                     Placeholder.component("count", Component.text(counter.currentCount())),
-                    Formatter.choice("second", counter.currentCount())
+                    Formatter.choice("unit_seconds", counter.currentCount())
                 );
             }
         }

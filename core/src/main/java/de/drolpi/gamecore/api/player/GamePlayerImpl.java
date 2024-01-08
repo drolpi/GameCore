@@ -17,7 +17,7 @@ import java.util.Set;
 final class GamePlayerImpl extends PreGamePlayerImpl implements GamePlayer {
 
     private final Player player;
-    private final Locale locale = Locale.ENGLISH;
+    private final Locale locale = Locale.GERMAN;
     private final GameControllerImpl gameController;
 
     GamePlayerImpl(Player player, GameControllerImpl gameController) {
