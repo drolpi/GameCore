@@ -58,7 +58,8 @@ public class LobbyPhase extends AbstractPhase {
         counterFeature.autoStart(false);
 
         this.createFeature(LevelCounterFeature.class);
-        this.createFeature(TitleCounterFeature.class);
+        TitleCounterFeature titleCounterFeature = this.createFeature(TitleCounterFeature.class);
+        titleCounterFeature.setOnFinish(false);
         MessageCounterFeature messageCounterFeature = this.createFeature(MessageCounterFeature.class);
         messageCounterFeature.setOnCancel(true);
         this.createFeature(SoundCounterFeature.class);
