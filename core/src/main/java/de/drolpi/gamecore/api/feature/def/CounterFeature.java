@@ -86,12 +86,12 @@ public class CounterFeature extends AbstractFeature {
     }
 
     protected void call(HandlerType handlerType, Counter counter) {
-        Set<Consumer<Counter>> handlers = this.handlers.computeIfPresent(handlerType, (type, consumers) -> consumers);
-        //TODO: Check if its necessary
-        Set<Consumer<Counter>> tmp = new HashSet<>(handlers);
-        for (Consumer<Counter> handler : tmp) {
-            handler.accept(counter);
-        }
+        this.handlers.computeIfPresent(handlerType, (type, consumers) -> {
+            for (Consumer<Counter> handler : new HashSet<>(consumers)) {
+                handler.accept(counter);
+            }
+            return consumers;
+        });
     }
 
     public void registerHandler(HandlerType handlerType, Consumer<Counter> handler) {
