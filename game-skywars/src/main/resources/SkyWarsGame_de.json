@@ -13,7 +13,7 @@
     "starting.counter_tick_subtitle": "",
     "starting.counter_finish_title": "<green>Los!",
     "starting.counter_finish_subtitle": "",
-    "protection.counter_tick_message": "<key:prefix><gray>Die Schutzzeit endet in <yellow><count> <gray><key:unit.seconds>",
+    "protection.counter_tick_message": "<key:prefix><gray>Die Schutzzeit endet in <yellow><count> <gray><key:unit_seconds>",
     "protection.counter_finish_message": "<key:prefix><gray>Die Schutzzeit ist nun vorbei",
     "ingame.counter_tick_message": "<key:prefix><gray>Das Spiel endet in <yellow><count> <gray><key:unit_minutes>",
     "ingame.counter_finish_message": "<key:prefix><gray>Das Spiel endet nun",
