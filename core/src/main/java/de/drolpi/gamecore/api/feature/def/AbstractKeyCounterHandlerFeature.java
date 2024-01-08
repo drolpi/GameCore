@@ -16,7 +16,7 @@ public abstract class AbstractKeyCounterHandlerFeature extends AbstractCounterHa
 
     @Override
     protected void start(Counter counter) {
-        this.perform(counter, this.phase.key() + ".counter_start");
+        this.perform(counter, this.phase.key() + "counter_start");
     }
 
     @Override
@@ -25,16 +25,16 @@ public abstract class AbstractKeyCounterHandlerFeature extends AbstractCounterHa
             return;
         }
 
-        this.perform(counter, this.phase.key() + ".counter_tick");
+        this.perform(counter, this.phase.key() + "counter_tick");
     }
 
     @Override
     protected void cancel(Counter counter) {
-        this.perform(counter, this.phase.key() + ".counter_cancel");
+        this.perform(counter, this.phase.key() + "counter_cancel");
     }
 
     @Override
     protected void finish(Counter counter) {
-        this.perform(counter, this.phase.key() + ".counter_finish");
+        this.perform(counter, this.phase.key() + "counter_finish");
     }
 }

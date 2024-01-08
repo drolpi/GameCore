@@ -38,7 +38,7 @@ public abstract class AbstractPhase extends AbstractIdentifiable implements Phas
 
     @Override
     public String key() {
-        return this.getClass().getAnnotation(PhaseInfo.class).key();
+        return this.getClass().getAnnotation(PhaseInfo.class).key() + ".";
     }
 
     public void enable() {
