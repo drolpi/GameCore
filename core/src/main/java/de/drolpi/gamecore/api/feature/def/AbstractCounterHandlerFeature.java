@@ -35,11 +35,10 @@ public abstract class AbstractCounterHandlerFeature extends AbstractFeature {
 
     @Override
     public void disable() {
-        //TODO: Fix ConcurrentModifyException because calling this methods by an handler
-        //this.counterFeature.unregisterHandler(HandlerType.START, this.startHandler);
-        //this.counterFeature.unregisterHandler(HandlerType.TICk, this.tickHandler);
-        //this.counterFeature.unregisterHandler(HandlerType.CANCEL, this.cancelHandler);
-        //this.counterFeature.unregisterHandler(HandlerType.FINISH, this.finishHandler);
+        this.counterFeature.unregisterHandler(HandlerType.START, this.startHandler);
+        this.counterFeature.unregisterHandler(HandlerType.TICk, this.tickHandler);
+        this.counterFeature.unregisterHandler(HandlerType.CANCEL, this.cancelHandler);
+        this.counterFeature.unregisterHandler(HandlerType.FINISH, this.finishHandler);
     }
 
     protected abstract void start(Counter counter);
