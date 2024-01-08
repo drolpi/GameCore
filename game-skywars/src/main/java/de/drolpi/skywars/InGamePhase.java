@@ -3,6 +3,7 @@ package de.drolpi.skywars;
 import de.drolpi.gamecore.api.condition.def.LastManStandingVictoryCondition;
 import de.drolpi.gamecore.api.feature.def.AutoRespawnFeature;
 import de.drolpi.gamecore.api.feature.def.CounterFeature;
+import de.drolpi.gamecore.api.feature.def.DeathMessageFeature;
 import de.drolpi.gamecore.api.feature.def.GameModeFeature;
 import de.drolpi.gamecore.api.feature.def.MapFeature;
 import de.drolpi.gamecore.api.feature.def.MessageCounterFeature;
@@ -33,6 +34,7 @@ public final class InGamePhase extends AbstractPhase {
         this.createFeature(AutoRespawnFeature.class);
 
         TeamFeature teamFeature = this.createFeature(TeamFeature.class);
+        this.createFeature(DeathMessageFeature.class);
 
         WinDetectionFeature winDetectionFeature = this.createFeature(WinDetectionFeature.class);
         winDetectionFeature.createVictoryCondition(LastManStandingVictoryCondition.class);

@@ -17,6 +17,10 @@
     "protection.counter_finish_message": "<key:prefix><gray>Die Schutzzeit ist nun vorbei",
     "ingame.counter_tick_message": "<key:prefix><gray>Das Spiel endet in <yellow><count> <gray><key:unit.minutes>",
     "ingame.counter_finish_message": "<key:prefix><gray>Das Spiel endet nun",
+    "ingame.death_private": "<red>Du bist gestorben",
+    "ingame.death_brodcast": "<yellow><playername> <gray>ist gestorben",
+    "ingame.death_killed_private": "<gray>Du wurdest von <yellow><killername> <gray>getötet",
+    "ingame.death_killed_brodcast": "<yellow><playername> <gray>wurde von <yellow><killername> <gray>getötet",
     "ending.counter_tick_message": "<key:prefix><gray>Der Server restartet in <red><count> <gray><key:unit.seconds>",
     "ending.counter_finish_message": "<key:prefix><gray>Der Server restartet nun"
 }
