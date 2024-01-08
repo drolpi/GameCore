@@ -56,11 +56,15 @@ public class LastManStandingVictoryCondition extends AbstractVictoryCondition {
             return;
         }
 
-        if(!(event.getEntity() instanceof Player player)) {
+        if (!(event.getEntity() instanceof Player player)) {
             return;
         }
 
-        this.teamFeature.removePlayer(this.playerHandler.player(event.getEntity().getUniqueId()));
+        if (!this.teamFeature.isInTeam(player.getUniqueId())) {
+            return;
+        }
+
+        this.teamFeature.removePlayer(this.playerHandler.player(player.getUniqueId()));
         this.winDetectionFeature.checkWin(this);
     }
 
