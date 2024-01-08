@@ -4,17 +4,21 @@ import com.google.gson.annotations.Expose;
 import com.google.inject.Inject;
 import de.drolpi.gamecore.api.feature.AbstractFeature;
 import de.drolpi.gamecore.api.game.Game;
+import de.drolpi.gamecore.api.phase.Phase;
 import de.drolpi.gamecore.api.player.GamePlayer;
 import de.drolpi.gamecore.components.team.TeamInstance;
 import de.drolpi.gamecore.api.condition.WinnerGameData;
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Player;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.title.Title;
 
 import java.util.stream.Collectors;
 
 public class PostGameFeature extends AbstractFeature {
 
     private final Game game;
+    private final Phase phase;
 
     @Expose
     private String emptyTeamName = "§c???";
@@ -22,8 +26,9 @@ public class PostGameFeature extends AbstractFeature {
     private String emptyPlayerName = "§c???";
 
     @Inject
-    public PostGameFeature(Game game) {
+    public PostGameFeature(Game game, Phase phase) {
         this.game = game;
+        this.phase = phase;
     }
 
     @Override
@@ -45,11 +50,18 @@ public class PostGameFeature extends AbstractFeature {
             }
         }
 
-        for (GamePlayer gamePlayer : this.game.allPlayers()) {
-            Player player = gamePlayer.player();
+        final TagResolver.Single teamNameHolder = Placeholder.component("teamname", Component.text(teamName));
+        final TagResolver.Single playerNamesHolder = Placeholder.component("playernames", Component.text(playerName));
 
-            player.sendMessage(Component.text(teamName));
-            player.sendMessage(Component.text(playerName));
+        final Component message = Component.translatable(this.phase.key() + "winner_brodcast");
+        final Title title = Title.title(
+            Component.translatable(this.phase.key() + "winner_title"),
+            Component.translatable(this.phase.key() + "winner_subtitle")
+        );
+
+        for (final GamePlayer allPlayer : this.game.allPlayers()) {
+            allPlayer.showTitle(title, teamNameHolder, playerNamesHolder);
+            allPlayer.sendMessage(message, teamNameHolder, playerNamesHolder);
         }
     }
 

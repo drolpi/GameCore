@@ -22,5 +22,8 @@
     "ingame.death_killed_private": "<key:prefix><red>Du wurdest von <yellow><killername> <red>getötet",
     "ingame.death_killed_brodcast": "<key:prefix><yellow><playername> <gray>wurde von <yellow><killername> <gray>getötet",
     "ending.counter_tick_message": "<key:prefix><gray>Der Server start in <red><count> <gray><key:unit.seconds> neu",
-    "ending.counter_finish_message": "<key:prefix><gray>Der Server startet nun neu"
+    "ending.counter_finish_message": "<key:prefix><gray>Der Server startet nun neu",
+    "ending.winner_brodcast": "<br><key:prefix><yellow>Team <teamname> <yellow>hat das Spiel gewonnen<br><key:prefix><yellow>Spieler des Teams: <playernames>",
+    "ending.winner_title": "<teamname>",
+    "ending.winner_subtitle": "<gray>hat gewonnen"
 }
