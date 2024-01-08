@@ -2,6 +2,7 @@
     "prefix": "<dark_gray>» <green>SkyWars <dark_gray>●</dark_gray> ",
     "unit.seconds": "<unit_seconds:-2#Sekunden|-1#Sekunde|0#Sekunden|1#Sekunde|2#Sekunden'>",
     "unit.minutes": "<unit_minutes:-2#Minuten|-1#Minute|0#Minuten|1#Minute|2#Minuten'>",
+    "set_spectator": "<key:prefix><gray>Du bist nun ein <yellow>Spectator",
     "lobby.player_join": "<key:prefix><yellow><playername> <gray>hat das Spiel <green>betreten",
     "lobby.player_quit": "<key:prefix><yellow><playername> <gray>hat das Spiel <red>verlassen",
     "lobby.counter_tick_message": "<key:prefix><gray>Die Runde beginnt in <yellow><count> <gray><key:unit.seconds>",
@@ -23,7 +24,7 @@
     "ingame.death_killed_brodcast": "<key:prefix><yellow><playername> <gray>wurde von <yellow><killername> <gray>getötet",
     "ending.counter_tick_message": "<key:prefix><gray>Der Server start in <red><count> <gray><key:unit.seconds> neu",
     "ending.counter_finish_message": "<key:prefix><gray>Der Server startet nun neu",
-    "ending.winner_brodcast": "<br><key:prefix><yellow>Team <teamname> <yellow>hat das Spiel gewonnen<br><key:prefix><yellow>Spieler des Teams: <playernames>",
+    "ending.winner_brodcast": "<br><key:prefix><yellow>Team <white><teamname> <yellow>hat das Spiel gewonnen<br><key:prefix><yellow>Spieler des Teams: <playernames><br>",
     "ending.winner_title": "<teamname>",
     "ending.winner_subtitle": "<gray>hat gewonnen"
 }

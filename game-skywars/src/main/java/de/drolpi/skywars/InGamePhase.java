@@ -7,6 +7,8 @@ import de.drolpi.gamecore.api.feature.def.DeathMessageFeature;
 import de.drolpi.gamecore.api.feature.def.GameModeFeature;
 import de.drolpi.gamecore.api.feature.def.MapFeature;
 import de.drolpi.gamecore.api.feature.def.MessageCounterFeature;
+import de.drolpi.gamecore.api.feature.def.SpectatorFeature;
+import de.drolpi.gamecore.api.feature.def.SpectatorSpawnFeature;
 import de.drolpi.gamecore.api.feature.def.StaticMapFeature;
 import de.drolpi.gamecore.api.feature.def.TeamFeature;
 import de.drolpi.gamecore.api.feature.def.WinDetectionFeature;
@@ -32,6 +34,9 @@ public final class InGamePhase extends AbstractPhase {
         MapFeature mapFeature = this.createFeature(MapFeature.class);
         mapFeature.setShouldUnload(true);
         this.createFeature(AutoRespawnFeature.class);
+
+        this.createFeature(SpectatorFeature.class);
+        this.createFeature(SpectatorSpawnFeature.class);
 
         TeamFeature teamFeature = this.createFeature(TeamFeature.class);
         this.createFeature(DeathMessageFeature.class);

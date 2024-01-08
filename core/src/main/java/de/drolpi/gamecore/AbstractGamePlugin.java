@@ -84,6 +84,7 @@ public abstract class AbstractGamePlugin extends JavaPlugin implements GamePlugi
         locationsDefinition.locations().add(new LocationDefinition(-54.5, 99, 14.5, -90, 0));
 
         future.addDefinition("Spawns", locationsDefinition);
+        future.addDefinition("SpectatorSpawn", new LocationDefinition(0, 100, 0, 0, 0));
         this.worldHandler.saveMap(future);
 
         this.gameController.startDefaultGame();

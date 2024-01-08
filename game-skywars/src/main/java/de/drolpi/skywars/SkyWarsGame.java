@@ -7,6 +7,8 @@ import de.drolpi.gamecore.api.feature.def.BossBarCounterFeature;
 import de.drolpi.gamecore.api.feature.def.BossBarFeature;
 import de.drolpi.gamecore.api.feature.def.MapFeature;
 import de.drolpi.gamecore.api.feature.def.SpawnFeature;
+import de.drolpi.gamecore.api.feature.def.SpectatorFeature;
+import de.drolpi.gamecore.api.feature.def.SpectatorSpawnFeature;
 import de.drolpi.gamecore.api.feature.def.StartingFeature;
 import de.drolpi.gamecore.api.feature.def.StaticMapFeature;
 import de.drolpi.gamecore.api.feature.def.TeamSelectFeature;
@@ -55,16 +57,20 @@ public final class SkyWarsGame extends AbstractGame {
         startingPhase.createFeature(SpawnFeature.class);
         startingPhase.createFeature(AutoRespawnFeature.class);
         startingPhase.createFeature(StartingFeature.class);
+        startingPhase.createFeature(SpectatorFeature.class);
+        startingPhase.createFeature(SpectatorSpawnFeature.class);
 
         ProtectionPhase protectionPhase = this.createPhase(ProtectionPhase.class);
         StaticMapFeature protectionStaticMapFeature = protectionPhase.createFeature(StaticMapFeature.class);
         protectionStaticMapFeature.setName("Future");
         protectionPhase.createFeature(MapFeature.class);
         protectionPhase.createFeature(AutoRespawnFeature.class);
+        protectionPhase.createFeature(SpectatorFeature.class);
+        protectionPhase.createFeature(SpectatorSpawnFeature.class);
 
+        //TODO: fix
         BossBarFeature bossBarFeature = protectionPhase.createFeature(BossBarFeature.class);
         bossBarFeature.setColor(BarColor.GREEN);
-
         protectionPhase.createFeature(BossBarCounterFeature.class);
 
         WinDetectionFeature protectionWinDetectionFeature = protectionPhase.createFeature(WinDetectionFeature.class);
