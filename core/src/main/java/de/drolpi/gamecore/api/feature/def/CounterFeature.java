@@ -8,7 +8,6 @@ import de.drolpi.gamecore.api.counter.HandlerType;
 import de.drolpi.gamecore.api.game.Game;
 import de.drolpi.gamecore.api.feature.AbstractFeature;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -56,7 +55,7 @@ public class CounterFeature extends AbstractFeature {
             .stopCount(this.stopCount)
             .tick(1, this.timeUnit)
             .startCallback(c -> this.call(HandlerType.START, c))
-            .tickCallback(c -> this.call(HandlerType.TICk, c))
+            .tickCallback(c -> this.call(HandlerType.TICK, c))
             .cancelCallback(c -> this.call(HandlerType.CANCEL, c))
             .finishCallback(c -> this.call(HandlerType.FINISH, c))
             .build();
@@ -87,12 +86,12 @@ public class CounterFeature extends AbstractFeature {
     }
 
     protected void call(HandlerType handlerType, Counter counter) {
-        this.handlers.computeIfPresent(handlerType, (handlerType1, handlers) -> {
-            for (Consumer<Counter> handler : new HashSet<>(handlers)) {
-                handler.accept(counter);
-            }
-            return handlers;
-        });
+        Set<Consumer<Counter>> handlers = this.handlers.computeIfPresent(handlerType, (type, consumers) -> consumers);
+        //TODO: Check if its necessary
+        Set<Consumer<Counter>> tmp = new HashSet<>(handlers);
+        for (Consumer<Counter> handler : tmp) {
+            handler.accept(counter);
+        }
     }
 
     public void registerHandler(HandlerType handlerType, Consumer<Counter> handler) {

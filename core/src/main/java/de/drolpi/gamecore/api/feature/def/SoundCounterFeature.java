@@ -8,12 +8,11 @@ import de.drolpi.gamecore.api.phase.Phase;
 import de.drolpi.gamecore.api.player.GamePlayer;
 import net.kyori.adventure.sound.Sound;
 
-public class SoundCounterFeature extends AbstractCounterHandlerFeature {
+public class SoundCounterFeature extends AbstractCounterHandlerConfigFeature {
 
     private final Game game;
     private final Sound play;
-    @Expose
-    private int[] ticks = new int[]{60, 50, 40, 30, 20, 15, 10, 5, 4, 3, 2, 1};
+
     @Expose
     private org.bukkit.Sound sound = org.bukkit.Sound.BLOCK_NOTE_BLOCK_PLING;
     @Expose
@@ -30,29 +29,33 @@ public class SoundCounterFeature extends AbstractCounterHandlerFeature {
 
     @Override
     protected void start(Counter counter) {
-
+        for (final GamePlayer allPlayer : this.game.allPlayers()) {
+            allPlayer.playSound(this.play);
+        }
     }
 
     @Override
     protected void tick(Counter counter) {
-        for (final GamePlayer allPlayer : this.game.allPlayers()) {
-            for (int tick : this.ticks) {
-                if (tick != counter.currentCount()) {
-                    continue;
-                }
+        if (!this.shouldTick(counter.currentCount())) {
+            return;
+        }
 
-                allPlayer.playSound(this.play);
-            }
+        for (final GamePlayer allPlayer : this.game.allPlayers()) {
+            allPlayer.playSound(this.play);
         }
     }
 
     @Override
     protected void cancel(Counter counter) {
-
+        for (final GamePlayer allPlayer : this.game.allPlayers()) {
+            allPlayer.playSound(this.play);
+        }
     }
 
     @Override
     protected void finish(Counter counter) {
-
+        for (final GamePlayer allPlayer : this.game.allPlayers()) {
+            allPlayer.playSound(this.play);
+        }
     }
 }

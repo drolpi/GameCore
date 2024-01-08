@@ -1,6 +1,5 @@
 package de.drolpi.gamecore.api.feature.def;
 
-import com.google.inject.Inject;
 import de.drolpi.gamecore.api.counter.Counter;
 import de.drolpi.gamecore.api.counter.HandlerType;
 import de.drolpi.gamecore.api.feature.AbstractFeature;
@@ -11,12 +10,11 @@ import java.util.function.Consumer;
 public abstract class AbstractCounterHandlerFeature extends AbstractFeature {
 
     protected final CounterFeature counterFeature;
-    private final Consumer<Counter> startHandler;
-    private final Consumer<Counter> tickHandler;
-    private final Consumer<Counter> cancelHandler;
-    private final Consumer<Counter> finishHandler;
+    protected final Consumer<Counter> startHandler;
+    protected final Consumer<Counter> tickHandler;
+    protected final Consumer<Counter> cancelHandler;
+    protected final Consumer<Counter> finishHandler;
 
-    @Inject
     public AbstractCounterHandlerFeature(Phase phase) {
         this.counterFeature = phase.feature(CounterFeature.class);
         this.startHandler = this::start;
@@ -28,7 +26,7 @@ public abstract class AbstractCounterHandlerFeature extends AbstractFeature {
     @Override
     public void enable() {
         this.counterFeature.registerHandler(HandlerType.START, this.startHandler);
-        this.counterFeature.registerHandler(HandlerType.TICk, this.tickHandler);
+        this.counterFeature.registerHandler(HandlerType.TICK, this.tickHandler);
         this.counterFeature.registerHandler(HandlerType.CANCEL, this.cancelHandler);
         this.counterFeature.registerHandler(HandlerType.FINISH, this.finishHandler);
     }
@@ -36,7 +34,7 @@ public abstract class AbstractCounterHandlerFeature extends AbstractFeature {
     @Override
     public void disable() {
         this.counterFeature.unregisterHandler(HandlerType.START, this.startHandler);
-        this.counterFeature.unregisterHandler(HandlerType.TICk, this.tickHandler);
+        this.counterFeature.unregisterHandler(HandlerType.TICK, this.tickHandler);
         this.counterFeature.unregisterHandler(HandlerType.CANCEL, this.cancelHandler);
         this.counterFeature.unregisterHandler(HandlerType.FINISH, this.finishHandler);
     }

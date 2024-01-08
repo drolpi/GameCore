@@ -31,11 +31,6 @@ public abstract class AbstractCounterProgressFeature extends AbstractCounterHand
         this.countUp = this.counterFeature.stopCount() > this.counterFeature.startCount();
     }
 
-    @Override
-    public void disable() {
-        super.disable();
-    }
-
     @EventHandler
     public void handle(GameJoinEvent event) {
         Player player = event.gamePlayer().player();
