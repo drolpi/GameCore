@@ -21,7 +21,7 @@ public abstract class AbstractKeyCounterHandlerFeature extends AbstractCounterHa
 
     @Override
     protected void tick(Counter counter) {
-        if (this.shouldTick(counter.currentCount())) {
+        if (!this.shouldTick(counter.currentCount())) {
             return;
         }
 
