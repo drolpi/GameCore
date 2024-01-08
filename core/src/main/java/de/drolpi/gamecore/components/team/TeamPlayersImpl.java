@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 final class TeamPlayersImpl implements TeamPlayers {
@@ -37,8 +38,8 @@ final class TeamPlayersImpl implements TeamPlayers {
     }
 
     @Override
-    public boolean isTeamMate(@NotNull GamePlayer other) {
-        return this.team != null && this.collect().contains(other);
+    public boolean isTeamMate(@NotNull UUID other) {
+        return this.team != null && this.collect().stream().anyMatch(gamePlayer -> gamePlayer.uniqueId().equals(other));
     }
 
     @Override

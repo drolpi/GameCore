@@ -5,6 +5,7 @@ import de.drolpi.gamecore.api.player.GamePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
+import java.util.UUID;
 
 public interface TeamPlayers {
 
@@ -14,7 +15,7 @@ public interface TeamPlayers {
 
     int count();
 
-    boolean isTeamMate(@NotNull GamePlayer other);
+    boolean isTeamMate(@NotNull UUID uniqueId);
 
     @NotNull AddResult add(@NotNull GamePlayer player);
 

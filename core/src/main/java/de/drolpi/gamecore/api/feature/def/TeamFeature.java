@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class TeamFeature extends AbstractFeature {
@@ -51,7 +52,7 @@ public class TeamFeature extends AbstractFeature {
 
     private void fillTeams(@NotNull Collection<GamePlayer> players) {
         for (GamePlayer player : players) {
-            if (!this.isInTeam(player)) {
+            if (!this.isInTeam(player.uniqueId())) {
                 TeamInstance team = this.mostFullAndFreeTeam();
                 team.players().add(player);
             }
@@ -73,7 +74,7 @@ public class TeamFeature extends AbstractFeature {
     }
 
     public void removePlayer(GamePlayer player) {
-        Optional<TeamInstance> team = this.teamByPlayer(player);
+        Optional<TeamInstance> team = this.teamByPlayer(player.uniqueId());
         team.ifPresent(teamInstance -> teamInstance.players().remove(player));
     }
 
@@ -81,13 +82,13 @@ public class TeamFeature extends AbstractFeature {
         return Optional.ofNullable(this.teamInstances.get(name));
     }
 
-    public @NotNull Optional<TeamInstance> teamByPlayer(@NotNull GamePlayer player) {
-        return this.teamInstances.values().stream().filter(team -> team.players().isTeamMate(player)).findFirst();
+    public @NotNull Optional<TeamInstance> teamByPlayer(@NotNull UUID uniqueId) {
+        return this.teamInstances.values().stream().filter(team -> team.players().isTeamMate(uniqueId)).findFirst();
     }
 
-    public boolean isInTeam(@NotNull GamePlayer player) {
+    public boolean isInTeam(@NotNull UUID uniqueId) {
         for (TeamInstance team : this.teams()) {
-            if (team.players().isTeamMate(player)) {
+            if (team.players().isTeamMate(uniqueId)) {
                 return true;
             }
         }
