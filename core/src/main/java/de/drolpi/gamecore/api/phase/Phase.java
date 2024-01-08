@@ -8,6 +8,8 @@ import java.util.Set;
 
 public interface Phase {
 
+    String key();
+
     <T extends AbstractFeature> T feature(Class<T> type);
 
     @NotNull Set<Feature> features();

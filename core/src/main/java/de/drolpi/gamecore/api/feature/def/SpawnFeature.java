@@ -17,13 +17,14 @@ import org.bukkit.event.EventHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SpawnFeature extends AbstractFeature {
 
     private final GamePlugin plugin;
     private final Game game;
     private final MapFeature mapFeature;
+    private final List<Runnable> handlers;
 
     @Expose
     private boolean isRespawn = true;
@@ -38,6 +39,7 @@ public class SpawnFeature extends AbstractFeature {
         this.plugin = plugin;
         this.game = game;
         this.mapFeature = phase.feature(MapFeature.class);
+        this.handlers = new ArrayList<>();
     }
 
     @Override
@@ -56,8 +58,22 @@ public class SpawnFeature extends AbstractFeature {
             return;
         }
 
-        for (GamePlayer gamePlayer : this.game.allPlayers()) {
-            gamePlayer.player().teleport(this.spawn());
+        AtomicInteger count = new AtomicInteger();
+        List<GamePlayer> players = this.game.allPlayers();
+
+        for (GamePlayer gamePlayer : players) {
+            gamePlayer.player().teleportAsync(this.spawn()).thenRun(() -> {
+                int c = count.incrementAndGet();
+                if (players.size() != c) {
+                    return;
+                }
+
+                this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
+                    for (Runnable handler : this.handlers) {
+                        handler.run();
+                    }
+                });
+            });
         }
     }
 
@@ -71,7 +87,11 @@ public class SpawnFeature extends AbstractFeature {
         event.gamePlayer().player().teleport(this.spawn());
     }
 
-    public Location spawn() {
+    public void registerHandler(Runnable handler) {
+        this.handlers.add(handler);
+    }
+
+    private Location spawn() {
         int location = ThreadLocalRandom.current().nextInt(this.locations.size());
         return this.shouldRemove ? this.locations.remove(location) : this.locations.get(location);
     }

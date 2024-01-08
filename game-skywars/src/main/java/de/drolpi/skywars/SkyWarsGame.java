@@ -7,6 +7,7 @@ import de.drolpi.gamecore.api.feature.def.BossBarCounterFeature;
 import de.drolpi.gamecore.api.feature.def.BossBarFeature;
 import de.drolpi.gamecore.api.feature.def.MapFeature;
 import de.drolpi.gamecore.api.feature.def.SpawnFeature;
+import de.drolpi.gamecore.api.feature.def.StartingFeature;
 import de.drolpi.gamecore.api.feature.def.StaticMapFeature;
 import de.drolpi.gamecore.api.feature.def.TeamSelectFeature;
 import de.drolpi.gamecore.api.feature.def.WinDetectionFeature;
@@ -53,6 +54,7 @@ public final class SkyWarsGame extends AbstractGame {
         startingPhase.createFeature(MapFeature.class);
         startingPhase.createFeature(SpawnFeature.class);
         startingPhase.createFeature(AutoRespawnFeature.class);
+        startingPhase.createFeature(StartingFeature.class);
 
         ProtectionPhase protectionPhase = this.createPhase(ProtectionPhase.class);
         StaticMapFeature protectionStaticMapFeature = protectionPhase.createFeature(StaticMapFeature.class);

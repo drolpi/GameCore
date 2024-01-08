@@ -7,7 +7,7 @@ import de.drolpi.gamecore.api.phase.Phase;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
-public class BossBarCounterFeature extends AbstractProgressCounterFeature {
+public class BossBarCounterFeature extends AbstractCounterProgressFeature {
 
     private final BossBarFeature bossBarFeature;
 

@@ -1,5 +1,6 @@
 package de.drolpi.gamecore.api.phase.def;
 
+import de.drolpi.gamecore.api.feature.def.MessageCounterFeature;
 import de.drolpi.gamecore.api.feature.def.NoHungerLossFeature;
 import de.drolpi.gamecore.api.counter.HandlerType;
 import de.drolpi.gamecore.api.feature.def.ClearInventoryFeature;
@@ -10,10 +11,14 @@ import de.drolpi.gamecore.api.feature.def.NoBlockBreakFeature;
 import de.drolpi.gamecore.api.feature.def.NoBlockPlaceFeature;
 import de.drolpi.gamecore.api.feature.def.NoDamageFeature;
 import de.drolpi.gamecore.api.feature.def.NoMoveFeature;
+import de.drolpi.gamecore.api.feature.def.StartingFeature;
 import de.drolpi.gamecore.api.feature.def.TeamFeature;
+import de.drolpi.gamecore.api.feature.def.TitleCounterFeature;
 import de.drolpi.gamecore.api.phase.AbstractPhase;
+import de.drolpi.gamecore.api.phase.PhaseInfo;
 import org.bukkit.GameMode;
 
+@PhaseInfo(name = "StartingPhase", key = "starting")
 public class StartingPhase extends AbstractPhase {
 
     @Override
@@ -36,9 +41,8 @@ public class StartingPhase extends AbstractPhase {
         CounterFeature counterFeature = this.createFeature(CounterFeature.class);
         counterFeature.startCount(5);
         counterFeature.stopCount(0);
-        counterFeature.registerHandler(HandlerType.TICk, counter -> {
-
-        });
+        counterFeature.autoStart(false);
         this.createFeature(LevelCounterFeature.class);
+        this.createFeature(TitleCounterFeature.class);
     }
 }

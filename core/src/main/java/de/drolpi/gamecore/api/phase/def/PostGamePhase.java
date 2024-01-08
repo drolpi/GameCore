@@ -5,6 +5,7 @@ import de.drolpi.gamecore.api.feature.def.ClearInventoryFeature;
 import de.drolpi.gamecore.api.feature.def.CounterFeature;
 import de.drolpi.gamecore.api.feature.def.GameModeFeature;
 import de.drolpi.gamecore.api.feature.def.LevelCounterFeature;
+import de.drolpi.gamecore.api.feature.def.MessageCounterFeature;
 import de.drolpi.gamecore.api.feature.def.NoBlockPlaceFeature;
 import de.drolpi.gamecore.api.feature.def.NoHungerLossFeature;
 import de.drolpi.gamecore.api.feature.def.NoItemDropFeature;
@@ -19,8 +20,10 @@ import de.drolpi.gamecore.api.feature.def.NoDamageFeature;
 import de.drolpi.gamecore.api.feature.def.NoItemPickupFeature;
 import de.drolpi.gamecore.api.feature.def.NoTimeChangeFeature;
 import de.drolpi.gamecore.api.feature.def.SpawnFeature;
+import de.drolpi.gamecore.api.phase.PhaseInfo;
 import org.bukkit.GameMode;
 
+@PhaseInfo(name = "PostGame", key = "ending")
 public class PostGamePhase extends AbstractPhase {
 
     @Override
@@ -58,5 +61,6 @@ public class PostGamePhase extends AbstractPhase {
         counterFeature.stopCount(0);
 
         this.createFeature(LevelCounterFeature.class);
+        this.createFeature(MessageCounterFeature.class);
     }
 }

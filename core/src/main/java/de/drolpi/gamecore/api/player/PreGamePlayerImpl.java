@@ -1,7 +1,9 @@
 package de.drolpi.gamecore.api.player;
 
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -26,6 +28,16 @@ class PreGamePlayerImpl implements GamePlayer {
 
     @Override
     public void sendMessage(Component component, TagResolver... resolvers) {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void showTitle(Title title, TagResolver... resolvers) {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void playSound(Sound sound) {
         throw new RuntimeException();
     }
 }

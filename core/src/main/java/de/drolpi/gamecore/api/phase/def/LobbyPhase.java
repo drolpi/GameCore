@@ -1,9 +1,11 @@
 package de.drolpi.gamecore.api.phase.def;
 
-import com.google.gson.annotations.Expose;
+import de.drolpi.gamecore.api.feature.def.MessageCounterFeature;
 import de.drolpi.gamecore.api.feature.def.NoHungerLossFeature;
 import de.drolpi.gamecore.api.feature.def.NoItemDropFeature;
 import de.drolpi.gamecore.api.feature.def.RemovePotionEffectsFeature;
+import de.drolpi.gamecore.api.feature.def.SoundCounterFeature;
+import de.drolpi.gamecore.api.feature.def.TitleCounterFeature;
 import de.drolpi.gamecore.api.phase.PhaseInfo;
 import de.drolpi.gamecore.api.feature.def.ClearInventoryFeature;
 import de.drolpi.gamecore.api.feature.def.CounterFeature;
@@ -22,7 +24,7 @@ import de.drolpi.gamecore.api.feature.def.SpawnFeature;
 import de.drolpi.gamecore.api.phase.AbstractPhase;
 import org.bukkit.GameMode;
 
-@PhaseInfo(name = "LobbyPhase", version = "1.0", authors = "dasdrolpi")
+@PhaseInfo(name = "LobbyPhase", key = "lobby", version = "1.0", authors = "dasdrolpi")
 public class LobbyPhase extends AbstractPhase {
 
     @Override
@@ -56,6 +58,9 @@ public class LobbyPhase extends AbstractPhase {
         counterFeature.autoStart(false);
 
         this.createFeature(LevelCounterFeature.class);
+        this.createFeature(TitleCounterFeature.class);
+        this.createFeature(MessageCounterFeature.class);
+        this.createFeature(SoundCounterFeature.class);
         this.createFeature(LobbyFeature.class);
     }
 }

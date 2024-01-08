@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -39,7 +40,7 @@ public class CounterFeature extends AbstractFeature {
     protected CounterFeature(GamePlugin plugin, Game game) {
         this.plugin = plugin;
         this.game = game;
-        this.handlers = new HashMap<>();
+        this.handlers = new ConcurrentHashMap<>();
         this.finishHandler = this::finish;
     }
 
@@ -87,7 +88,7 @@ public class CounterFeature extends AbstractFeature {
 
     protected void call(HandlerType handlerType, Counter counter) {
         this.handlers.computeIfPresent(handlerType, (handlerType1, handlers) -> {
-            for (Consumer<Counter> handler : handlers) {
+            for (Consumer<Counter> handler : new HashSet<>(handlers)) {
                 handler.accept(counter);
             }
             return handlers;

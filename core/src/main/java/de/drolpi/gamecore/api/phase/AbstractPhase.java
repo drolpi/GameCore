@@ -36,6 +36,11 @@ public abstract class AbstractPhase extends AbstractIdentifiable implements Phas
     @Expose
     private final List<AbstractFeature> features = new ArrayList<>();
 
+    @Override
+    public String key() {
+        return this.getClass().getAnnotation(PhaseInfo.class).key();
+    }
+
     public void enable() {
         for (AbstractFeature feature : this.features) {
             feature.enable();

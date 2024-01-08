@@ -3,11 +3,14 @@ package de.drolpi.gamecore.api.phase.def;
 import de.drolpi.gamecore.api.feature.def.ClearInventoryFeature;
 import de.drolpi.gamecore.api.feature.def.CounterFeature;
 import de.drolpi.gamecore.api.feature.def.GameModeFeature;
+import de.drolpi.gamecore.api.feature.def.MessageCounterFeature;
 import de.drolpi.gamecore.api.feature.def.NoDamageFeature;
 import de.drolpi.gamecore.api.feature.def.TeamFeature;
 import de.drolpi.gamecore.api.phase.AbstractPhase;
+import de.drolpi.gamecore.api.phase.PhaseInfo;
 import org.bukkit.GameMode;
 
+@PhaseInfo(name = "ProtectionPhase", key = "protection")
 public class ProtectionPhase extends AbstractPhase {
 
     @Override
@@ -26,5 +29,6 @@ public class ProtectionPhase extends AbstractPhase {
         CounterFeature counterFeature = this.createFeature(CounterFeature.class);
         counterFeature.startCount(30);
         counterFeature.stopCount(0);
+        this.createFeature(MessageCounterFeature.class);
     }
 }

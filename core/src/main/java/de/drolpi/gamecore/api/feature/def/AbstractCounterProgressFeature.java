@@ -13,38 +13,27 @@ import org.bukkit.event.EventHandler;
 
 import java.util.function.Consumer;
 
-public abstract class AbstractProgressCounterFeature extends AbstractFeature {
+public abstract class AbstractCounterProgressFeature extends AbstractCounterHandlerFeature {
 
-    protected final CounterFeature counterFeature;
     private final Game game;
-    private final Consumer<Counter> startHandler;
-    private final Consumer<Counter> tickHandler;
-    private final Consumer<Counter> cancelHandler;
 
     private boolean countUp;
 
     @Inject
-    public AbstractProgressCounterFeature(Game game, Phase phase) {
+    public AbstractCounterProgressFeature(Game game, Phase phase) {
+        super(phase);
         this.game = game;
-        this.counterFeature = phase.feature(CounterFeature.class);
-        this.startHandler = this::start;
-        this.tickHandler = this::tick;
-        this.cancelHandler = this::cancel;
     }
 
     @Override
     public void enable() {
+        super.enable();
         this.countUp = this.counterFeature.stopCount() > this.counterFeature.startCount();
-        this.counterFeature.registerHandler(HandlerType.START, this.startHandler);
-        this.counterFeature.registerHandler(HandlerType.TICk, this.tickHandler);
-        this.counterFeature.registerHandler(HandlerType.CANCEL, this.cancelHandler);
     }
 
     @Override
     public void disable() {
-        this.counterFeature.unregisterHandler(HandlerType.START, this.startHandler);
-        this.counterFeature.unregisterHandler(HandlerType.TICk, this.tickHandler);
-        this.counterFeature.unregisterHandler(HandlerType.CANCEL, this.cancelHandler);
+        super.disable();
     }
 
     @EventHandler
@@ -58,20 +47,28 @@ public abstract class AbstractProgressCounterFeature extends AbstractFeature {
         this.setStart(player, counter);
     }
 
+    @Override
     protected void start(Counter counter) {
 
     }
 
+    @Override
     protected void tick(Counter counter) {
         for (final GamePlayer player : this.game.allPlayers()) {
             this.set(player.player(), (int) counter.currentCount(), this.progress(counter));
         }
     }
 
+    @Override
     protected void cancel(Counter counter) {
         for (final GamePlayer player : this.game.allPlayers()) {
             this.setStart(player.player(), counter);
         }
+    }
+
+    @Override
+    protected void finish(Counter counter) {
+
     }
 
     protected float progress(Counter counter) {

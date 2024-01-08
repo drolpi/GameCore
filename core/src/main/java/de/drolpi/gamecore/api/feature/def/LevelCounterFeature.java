@@ -2,11 +2,12 @@ package de.drolpi.gamecore.api.feature.def;
 
 import com.google.gson.annotations.Expose;
 import com.google.inject.Inject;
+import de.drolpi.gamecore.api.counter.Counter;
 import de.drolpi.gamecore.api.game.Game;
 import de.drolpi.gamecore.api.phase.Phase;
 import org.bukkit.entity.Player;
 
-public class LevelCounterFeature extends AbstractProgressCounterFeature {
+public class LevelCounterFeature extends AbstractCounterProgressFeature {
 
     @Expose
     private boolean levelProgress = true;

@@ -46,8 +46,10 @@ public class LobbyFeature extends AbstractFeature {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void handle(GameJoinEvent event) {
-        GamePlayer player = event.gamePlayer();
-        player.sendMessage(Component.translatable("lobby.player.join"), Placeholder.component("playername", Component.text(player.player().getName())));
+        final GamePlayer joinedPlayer = event.gamePlayer();
+        for (final GamePlayer allPlayer : this.game.allPlayers()) {
+            allPlayer.sendMessage(Component.translatable("lobby.player_join"), Placeholder.component("playername", Component.text(joinedPlayer.player().getName())));
+        }
 
         final Counter counter = this.counterFeature.counter();
         final int size = this.game.players().size();
@@ -68,8 +70,10 @@ public class LobbyFeature extends AbstractFeature {
 
     @EventHandler
     public void handle(GamePostLeaveEvent event) {
-        GamePlayer player = event.gamePlayer();
-        player.sendMessage(Component.translatable("lobby.player.quit"), Placeholder.component("playername", Component.text(player.player().getName())));
+        final GamePlayer quitedPlayer = event.gamePlayer();
+        for (final GamePlayer allPlayer : this.game.allPlayers()) {
+            allPlayer.sendMessage(Component.translatable("lobby.player_quit"), Placeholder.component("playername", Component.text(quitedPlayer.player().getName())));
+        }
 
         final Counter counter = this.counterFeature.counter();
         final int size = this.game.players().size();
