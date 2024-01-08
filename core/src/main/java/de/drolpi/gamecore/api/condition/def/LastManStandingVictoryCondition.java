@@ -11,6 +11,7 @@ import de.drolpi.gamecore.components.team.TeamInstance;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import java.util.Optional;
@@ -49,7 +50,7 @@ public class LastManStandingVictoryCondition extends AbstractVictoryCondition {
         return optional.get();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void handle(EntityDeathEvent event) {
         if (!event.getEntityType().equals(EntityType.PLAYER)) {
             return;
