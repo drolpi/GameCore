@@ -24,8 +24,6 @@ public class MessageCounterFeature extends AbstractCounterHandlerFeature {
 
     @Expose
     private int[] ticks = new int[]{60, 50, 40, 30, 20, 15, 10, 5, 4, 3, 2, 1};
-    @Expose
-    private Sound sound = Sound.BLOCK_NOTE_BLOCK_PLING;
 
     @Inject
     public MessageCounterFeature(Game game, Phase phase) {
