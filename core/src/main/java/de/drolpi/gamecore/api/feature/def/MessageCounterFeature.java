@@ -6,6 +6,7 @@ import de.drolpi.gamecore.api.game.Game;
 import de.drolpi.gamecore.api.phase.Phase;
 import de.drolpi.gamecore.api.player.GamePlayer;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 
@@ -23,9 +24,10 @@ public class MessageCounterFeature extends AbstractKeyCounterHandlerFeature {
     protected void perform(Counter counter, String preKey) {
         final Component component = Component.translatable(preKey + "_message");
         final TagResolver.Single placerHolder = Placeholder.component("count", Component.text(counter.currentCount()));
+        final TagResolver secondsFormatter = Formatter.choice("unit_seconds", counter.currentCount());
 
         for (final GamePlayer allPlayer : this.game.allPlayers()) {
-            allPlayer.sendMessage(component, placerHolder);
+            allPlayer.sendMessage(component, placerHolder, secondsFormatter);
         }
     }
 }
