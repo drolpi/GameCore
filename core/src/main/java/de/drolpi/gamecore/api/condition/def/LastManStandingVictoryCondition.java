@@ -70,6 +70,10 @@ public class LastManStandingVictoryCondition extends AbstractVictoryCondition {
 
     @EventHandler
     public void handle(GamePostLeaveEvent event) {
+        if (!this.teamFeature.isInTeam(event.gamePlayer().uniqueId())) {
+            return;
+        }
+
         this.winDetectionFeature.checkWin(this);
     }
 }
