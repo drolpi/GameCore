@@ -130,8 +130,6 @@ public abstract class AbstractGame implements Game, Creatable {
         this.allPlayers.remove(gamePlayer);
 
         this.pluginManager.callEvent(new GamePostLeaveEvent(this, gamePlayer));
-
-        //TODO: Maybe abort game while lobby phase if player size under min player size
         return true;
     }
 

@@ -13,6 +13,7 @@ import de.drolpi.gamecore.components.world.map.LocationDefinition;
 import de.drolpi.gamecore.components.world.map.LocationsDefinition;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,10 +61,10 @@ public class SpawnFeature extends AbstractFeature {
             return;
         }
 
-        AtomicInteger count = new AtomicInteger();
-        List<GamePlayer> players = this.game.allPlayers();
+        final AtomicInteger count = new AtomicInteger();
+        final List<GamePlayer> players = this.game.allPlayers();
 
-        for (GamePlayer gamePlayer : players) {
+        for (final GamePlayer gamePlayer : players) {
             gamePlayer.player().teleportAsync(this.spawn()).thenRun(() -> {
                 int c = count.incrementAndGet();
                 if (players.size() != c) {
@@ -86,6 +87,7 @@ public class SpawnFeature extends AbstractFeature {
 
     @EventHandler
     public void handle(GameJoinEvent event) {
+        //TODO: Maybe teleport async? Check which consequences it would have
         event.gamePlayer().player().teleport(this.spawn());
     }
 
