@@ -30,7 +30,7 @@ public final class SkyWarsPlugin extends AbstractGamePlugin {
         GameMap lobby = new GameMap();
         lobby.setName("WarteLobby");
         LocationsDefinition lobbyLocationsDefinition = new LocationsDefinition();
-        lobbyLocationsDefinition.locations().add(new LocationDefinition(0.5, 100, 0.5, 0, 0));
+        lobbyLocationsDefinition.locations().add(new LocationDefinition(0.5, 100, -3.5, 0, 0));
         lobby.addDefinition("Spawns", lobbyLocationsDefinition);
         this.worldHandler.saveMap(lobby);
 

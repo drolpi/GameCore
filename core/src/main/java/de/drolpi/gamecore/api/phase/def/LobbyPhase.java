@@ -1,5 +1,6 @@
 package de.drolpi.gamecore.api.phase.def;
 
+import de.drolpi.gamecore.api.feature.def.AnimatedSpawnFeature;
 import de.drolpi.gamecore.api.feature.def.MessageCounterFeature;
 import de.drolpi.gamecore.api.feature.def.NoHungerLossFeature;
 import de.drolpi.gamecore.api.feature.def.NoItemDropFeature;
@@ -49,6 +50,7 @@ public class LobbyPhase extends AbstractPhase {
 
         this.createFeature(MapFeature.class);
         this.createFeature(SpawnFeature.class);
+        this.createFeature(AnimatedSpawnFeature.class);
         this.createFeature(NoWeatherChangeFeature.class);
         this.createFeature(NoTimeChangeFeature.class);
 

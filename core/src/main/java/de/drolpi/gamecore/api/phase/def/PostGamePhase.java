@@ -1,5 +1,6 @@
 package de.drolpi.gamecore.api.phase.def;
 
+import de.drolpi.gamecore.api.feature.def.AnimatedSpawnFeature;
 import de.drolpi.gamecore.api.feature.def.AutoRespawnFeature;
 import de.drolpi.gamecore.api.feature.def.ClearInventoryFeature;
 import de.drolpi.gamecore.api.feature.def.CounterFeature;
@@ -49,6 +50,7 @@ public class PostGamePhase extends AbstractPhase {
         MapFeature mapFeature = this.createFeature(MapFeature.class);
         mapFeature.setShouldUnload(true);
         this.createFeature(SpawnFeature.class);
+        this.createFeature(AnimatedSpawnFeature.class);
 
         this.createFeature(NoWeatherChangeFeature.class);
         this.createFeature(NoTimeChangeFeature.class);

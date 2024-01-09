@@ -4,3 +4,4 @@ version: 1.0.0-SNAPSHOT
 authors:
     - dasdrolpi
 main: de.drolpi.gamecore.GameCorePlugin
+api-version: 1.20
