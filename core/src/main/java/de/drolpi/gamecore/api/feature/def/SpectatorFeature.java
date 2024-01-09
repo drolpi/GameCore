@@ -20,12 +20,12 @@ public class SpectatorFeature extends AbstractFeature {
 
     //TODO: remove player from game and add as spectator
 
-    private static final String TEAM_NAME = "Ghost";
+    private static final String TEAM_NAME = "Spectator";
     private final GamePlugin plugin;
     private final Game game;
     private final Phase phase;
 
-    private Team ghost;
+    private Team spectator;
 
     @Inject
     public SpectatorFeature(GamePlugin plugin, Game game, Phase phase) {
@@ -40,38 +40,45 @@ public class SpectatorFeature extends AbstractFeature {
         Team team = scoreboard.getTeam(TEAM_NAME);
 
         if (team == null) {
-            this.ghost = scoreboard.registerNewTeam(TEAM_NAME);
+            this.spectator = scoreboard.registerNewTeam(TEAM_NAME);
         } else {
-            this.ghost = team;
+            this.spectator = team;
         }
 
-        this.ghost.setCanSeeFriendlyInvisibles(true);
+        this.spectator.setCanSeeFriendlyInvisibles(true);
+        this.spectator.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
 
-        //TODO: set all player who are already spectators
+        // set all players who have been spectators since a previous phase
+        for (final GamePlayer spectator : this.game.spectators()) {
+            this.setSpectator(spectator);
+        }
     }
 
     @Override
     public void disable() {
-        this.ghost.unregister();
-        this.ghost = null;
+        this.spectator.unregister();
+        this.spectator = null;
     }
 
     @EventHandler
     public void handle(GameJoinEvent event) {
-        GamePlayer gamePlayer = event.gamePlayer();
+        final GamePlayer gamePlayer = event.gamePlayer();
+        this.setSpectator(gamePlayer);
+        gamePlayer.sendMessage(Component.translatable("set_spectator"));
+    }
+
+    private void setSpectator(GamePlayer gamePlayer) {
         Player player = gamePlayer.player();
         if (!this.game.isSpectating(player.getUniqueId())) {
             return;
         }
 
         player.setGameMode(GameMode.ADVENTURE);
-        //TODO: find correct way
         player.setCollidable(false);
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15, true, false));
-        this.ghost.addPlayer(player);
+        this.spectator.addPlayer(player);
 
         player.setAllowFlight(true);
         player.setFlying(true);
-        gamePlayer.sendMessage(Component.translatable("set_spectator"));
     }
 }
