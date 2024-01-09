@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.inject.Inject;
 import de.drolpi.gamecore.api.phase.Phase;
 import de.drolpi.gamecore.api.player.GamePlayer;
-import de.drolpi.gamecore.GamePlugin;
 import de.drolpi.gamecore.api.event.GameJoinEvent;
 import de.drolpi.gamecore.api.event.GamePostLeaveEvent;
 import de.drolpi.gamecore.api.feature.AbstractFeature;
@@ -14,85 +13,151 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.event.EventHandler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BossBarFeature extends AbstractFeature {
 
     private final Game game;
 
-    @Expose
-    private BossBar.Color color = BossBar.Color.BLUE;
-    @Expose
-    private BossBar.Overlay overlay = BossBar.Overlay.PROGRESS;
-
-    private final BossBar bossBar;
+    private final Map<BossBar, BossBarInfo> bossBars;
     private final Component defaultName;
-    private TagResolver[] resolvers;
 
     @Inject
     public BossBarFeature(Game game, Phase phase) {
         this.game = game;
         this.defaultName = Component.translatable(phase.key() + "bossbar_name");
-        this.bossBar = BossBar.bossBar(this.defaultName, 1.0f, this.color, this.overlay);
-        this.resolvers = new TagResolver[]{};
+        this.bossBars = new HashMap<>();
     }
 
     @Override
     public void enable() {
-
         for (GamePlayer gamePlayer : this.game.players()) {
-            gamePlayer.showBossBar(this.bossBar, resolvers);
+            for (BossBarInfo info : bossBars.values()) {
+                gamePlayer.showBossBar(info.bossbar, info.resolvers);
+            }
         }
     }
 
     @Override
     public void disable() {
         for (GamePlayer gamePlayer : this.game.players()) {
-            gamePlayer.hideBossBar(this.bossBar);
+            for (BossBar bossBar : bossBars.keySet()) {
+                gamePlayer.hideBossBar(bossBar);
+            }
         }
     }
 
     @EventHandler
     public void handle(GameJoinEvent event) {
-        event.gamePlayer().showBossBar(this.bossBar);
+        for (BossBarInfo info : bossBars.values()) {
+            event.gamePlayer().showBossBar(info.bossbar, info.resolvers);
+        }
     }
 
     @EventHandler
     public void handle(GamePostLeaveEvent event) {
-        event.gamePlayer().hideBossBar(this.bossBar);
+        for (BossBar bossBar : bossBars.keySet()) {
+            event.gamePlayer().hideBossBar(bossBar);
+        }
     }
 
-    public BossBar bossBar() {
-        return this.bossBar;
+    public BossBar.Color color(BossBar bossBar) {
+        return this.bossBars.get(bossBar).color;
     }
 
-    public BossBar.Color color() {
-        return this.color;
+    public BossBar.Overlay overlay(BossBar bossBar) {
+        return this.bossBars.get(bossBar).overlay;
     }
 
-    public BossBar.Overlay overlay() {
-        return this.overlay;
+    public void setProgress(BossBar bossBar, float progress) {
+        this.bossBars.get(bossBar).progress(progress);
     }
 
-    public void setProgress(float progress) {
-        this.bossBar.progress(progress);
+    public void setName(BossBar bossBar, Component name) {
+        this.bossBars.get(bossBar).name(name);
     }
 
-    public void setName(Component name) {
-        this.bossBar.name(name);
+    public void resetName(BossBar bossBar) {
+        this.bossBars.get(bossBar).name(this.defaultName);
     }
 
-    public void resetName() {
-        this.setName(this.defaultName);
+    public void setColor(BossBar bossBar, BossBar.Color color) {
+        this.bossBars.get(bossBar).color(color);
     }
 
-    public void setColor(BossBar.Color color) {
-        this.bossBar.color(color);
+    public void setResolvers(BossBar bossbar, TagResolver... resolvers) {
+        this.bossBars.get(bossbar).resolvers = resolvers;
     }
 
-    public void setResolvers(TagResolver[] resolvers) {
-        this.resolvers = resolvers;
+    public void setOverlay(BossBar bossBar, BossBar.Overlay overlay) {
+        this.bossBars.get(bossBar).overlay(overlay);
     }
 
-    public void setOverlay(BossBar.Overlay overlay) {
-        this.overlay = overlay;
+    public void addBossBar(BossBar bossBar) {
+        this.bossBars.put(bossBar, new BossBarInfo(bossBar.color(), bossBar.overlay(), bossBar));
+    }
+
+    public void removeBossBar(BossBar bossBar) {
+        this.bossBars.remove(bossBar);
+    }
+
+    public static class BossBarInfo {
+
+        @Expose
+        private BossBar.Color color;
+        @Expose
+        private BossBar.Overlay overlay;
+        @Expose
+        private TagResolver[] resolvers;
+
+        private final BossBar bossbar;
+
+        public BossBarInfo(BossBar.Color color, BossBar.Overlay overlay, BossBar bossbar) {
+            this.color = color;
+            this.overlay = overlay;
+            this.bossbar = bossbar;
+            this.resolvers = new TagResolver[]{};
+        }
+
+        public BossBar.Color color() {
+            return this.color;
+        }
+
+        public BossBar.Overlay overlay() {
+            return this.overlay;
+        }
+
+        public BossBar bossbar() {
+            return this.bossbar;
+        }
+
+        public TagResolver[] resolvers() {
+            return this.resolvers;
+        }
+
+        public Component name() {
+            return this.bossbar.name();
+        }
+
+        public void progress(float progress) {
+            this.bossbar.progress(progress);
+        }
+
+        public void name(Component name) {
+            this.bossbar.name(name);
+        }
+
+        public void color(BossBar.Color color) {
+            this.color = color;
+        }
+
+        public void overlay(BossBar.Overlay overlay) {
+            this.overlay = overlay;
+        }
+
+        public void resolvers(TagResolver[] resolvers) {
+            this.resolvers = resolvers;
+        }
     }
 }

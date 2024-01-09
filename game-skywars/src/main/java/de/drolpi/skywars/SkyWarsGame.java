@@ -68,9 +68,7 @@ public final class SkyWarsGame extends AbstractGame {
         protectionPhase.createFeature(SpectatorFeature.class);
         protectionPhase.createFeature(SpectatorSpawnFeature.class);
 
-        //TODO: fix
-        BossBarFeature bossBarFeature = protectionPhase.createFeature(BossBarFeature.class);
-        bossBarFeature.setColor(BossBar.Color.GREEN);
+        protectionPhase.createFeature(BossBarFeature.class);
         protectionPhase.createFeature(BossBarCounterFeature.class);
 
         WinDetectionFeature protectionWinDetectionFeature = protectionPhase.createFeature(WinDetectionFeature.class);
