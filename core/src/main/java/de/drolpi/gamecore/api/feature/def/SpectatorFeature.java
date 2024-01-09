@@ -5,8 +5,10 @@ import de.drolpi.gamecore.GamePlugin;
 import de.drolpi.gamecore.api.feature.AbstractFeature;
 import de.drolpi.gamecore.api.event.GameJoinEvent;
 import de.drolpi.gamecore.api.game.Game;
-import de.drolpi.gamecore.api.phase.Phase;
 import de.drolpi.gamecore.api.player.GamePlayer;
+import de.drolpi.gamecore.components.visibility.DefaultVisibilityRestriction;
+import de.drolpi.gamecore.components.visibility.VisibilityRestriction;
+import de.drolpi.gamecore.components.visibility.VisibilityRestrictionHandler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -23,27 +25,25 @@ public class SpectatorFeature extends AbstractFeature {
     private static final String TEAM_NAME = "Spectator";
     private final GamePlugin plugin;
     private final Game game;
-    private final Phase phase;
+    private final VisibilityRestrictionHandler restrictionHandler;
+    private final VisibilityRestriction restriction;
 
     private Team spectator;
 
     @Inject
-    public SpectatorFeature(GamePlugin plugin, Game game, Phase phase) {
+    public SpectatorFeature(GamePlugin plugin, Game game, VisibilityRestrictionHandler restrictionHandler) {
         this.plugin = plugin;
         this.game = game;
-        this.phase = phase;
+        this.restrictionHandler = restrictionHandler;
+        this.restriction = new DefaultVisibilityRestriction((player, player2) -> game.isSpectating(player.getUniqueId()) && game.isPlaying(player2.getUniqueId()));
     }
 
     @Override
     public void enable() {
+        this.restrictionHandler.register(this.restriction);
         Scoreboard scoreboard = this.plugin.getServer().getScoreboardManager().getMainScoreboard();
         Team team = scoreboard.getTeam(TEAM_NAME);
-
-        if (team == null) {
-            this.spectator = scoreboard.registerNewTeam(TEAM_NAME);
-        } else {
-            this.spectator = team;
-        }
+        this.spectator = team != null ? team : scoreboard.registerNewTeam(TEAM_NAME);
 
         this.spectator.setCanSeeFriendlyInvisibles(true);
         this.spectator.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
@@ -58,6 +58,7 @@ public class SpectatorFeature extends AbstractFeature {
     public void disable() {
         this.spectator.unregister();
         this.spectator = null;
+        this.restrictionHandler.unregister(this.restriction);
     }
 
     @EventHandler
@@ -68,17 +69,21 @@ public class SpectatorFeature extends AbstractFeature {
     }
 
     private void setSpectator(GamePlayer gamePlayer) {
-        Player player = gamePlayer.player();
+        final Player player = gamePlayer.player();
         if (!this.game.isSpectating(player.getUniqueId())) {
             return;
         }
 
         player.setGameMode(GameMode.ADVENTURE);
         player.setCollidable(false);
+        //TODO: Check if we can add the potion effect for infinity
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15, true, false));
+        player.setLevel(0);
+        player.setExp(0);
         this.spectator.addPlayer(player);
 
         player.setAllowFlight(true);
         player.setFlying(true);
+        this.restrictionHandler.updateAll();
     }
 }
