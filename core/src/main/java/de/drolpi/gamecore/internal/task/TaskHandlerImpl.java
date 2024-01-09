@@ -1,4 +1,4 @@
-package de.drolpi.gamecore.api.task;
+package de.drolpi.gamecore.internal.task;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,9 +30,14 @@ final class TaskHandlerImpl implements TaskHandler {
         for (Method method : this.instance.getClass().getDeclaredMethods()) {
             if (method.getParameterCount() == 0 && method.isAnnotationPresent(Task.class)) {
                 Task task = method.getAnnotation(Task.class);
-                this.tasks.get(task.event()).add(new TaskEntry(task, this.instance, method));
+                this.registerHandler(new TaskEntry(task, this.instance, method));
             }
         }
+    }
+
+    @Override
+    public void registerHandler(TaskEntry taskEntry) {
+        this.tasks.get(taskEntry.lifeCycle()).add(taskEntry);
     }
 
     @Override
@@ -48,16 +53,10 @@ final class TaskHandlerImpl implements TaskHandler {
     }
 
     private boolean fireTasks(List<TaskEntry> entries) {
-        entries.sort(Comparator.comparingInt(o -> o.taskInfo().order()));
+        entries.sort(Comparator.comparingInt(TaskEntry::order));
 
         for (TaskEntry entry : entries) {
-            entry.handler().setAccessible(true);
-            try {
-                entry.handler().invoke(entry.instance());
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-
+            entry.handler().run();
         }
 
         return true;

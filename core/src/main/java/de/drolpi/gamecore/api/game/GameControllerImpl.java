@@ -10,18 +10,20 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
+import de.drolpi.gamecore.AbstractGamePlugin;
+import de.drolpi.gamecore.GameCorePlugin;
 import de.drolpi.gamecore.GamePlugin;
+import de.drolpi.gamecore.api.IdentifiableListDeserializer;
 import de.drolpi.gamecore.api.IdentifiableModule;
 import de.drolpi.gamecore.api.condition.AbstractVictoryCondition;
-import de.drolpi.gamecore.api.phase.AbstractPhase;
-import de.drolpi.gamecore.api.player.GamePlayer;
-import de.drolpi.gamecore.api.IdentifiableListDeserializer;
 import de.drolpi.gamecore.api.feature.AbstractFeature;
 import de.drolpi.gamecore.api.feature.def.WinDetectionFeature;
+import de.drolpi.gamecore.api.phase.AbstractPhase;
 import de.drolpi.gamecore.api.phase.Phase;
+import de.drolpi.gamecore.api.player.GamePlayer;
 import de.drolpi.gamecore.components.localization.MessageFormatTranslationProvider;
 import de.drolpi.gamecore.components.localization.adventure.MiniMessageComponentRenderer;
-import de.drolpi.gamecore.components.localization.adventure.MiniMessageTranslator;
 import de.drolpi.gamecore.components.localization.bundle.FileJsonResourceLoader;
 import de.drolpi.gamecore.internal.config.ConfigLoader;
 import de.drolpi.gamecore.internal.config.GlobalConfig;
@@ -33,9 +35,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -55,29 +59,39 @@ public final class GameControllerImpl implements GameController {
 
     }.getType();
 
-    private final GamePlugin plugin;
-    private final Injector injector;
+    private final GameCorePlugin plugin;
     private final Gson gson;
     private final GlobalConfig config;
+    private final File dataFolder;
 
-    private final Set<GameType> gameTypes = new HashSet<>();
+    private final Map<AbstractGamePlugin, GameType> gameTypes = new HashMap<>();
     private final Set<AbstractGame> games = new HashSet<>();
     private AbstractGame defaultGame;
 
     @Inject
-    public GameControllerImpl(GamePlugin plugin, Injector injector, Gson gson, ConfigLoader configLoader) {
+    public GameControllerImpl(GameCorePlugin plugin, Gson gson, ConfigLoader configLoader, @Named("DataFolder") File dataFolder) {
         this.plugin = plugin;
-        this.injector = injector;
         this.gson = gson;
         this.config = configLoader.globalConfig();
+        this.dataFolder = dataFolder;
     }
 
     @Override
-    public GameType createGameType(@NotNull Class<? extends Game> type) {
-        final GameInfo gameInfo = type.getAnnotation(GameInfo.class);
+    public GameType createGameType(@NotNull Class<? extends Game> type, @NotNull GamePlugin plugin) {
+        if (!(plugin instanceof AbstractGamePlugin gamePlugin)) {
+            throw new RuntimeException();
+        }
 
-        final GameType gameType = new GameTypeImpl(gameInfo.name(), type);
-        this.gameTypes.add(gameType);
+        final GameInfo gameInfo = type.getAnnotation(GameInfo.class);
+        final GameType gameType = new GameTypeImpl(gameInfo.name(), type, this.dataFolder);
+
+        final File gameDataFolder = gameType.dataFolder();
+
+        if (gameDataFolder.mkdirs()) {
+            System.out.println("Created folder for GameType: " + gameType.name());
+        }
+
+        this.gameTypes.put(gamePlugin, gameType);
         return gameType;
     }
 
@@ -87,7 +101,7 @@ public final class GameControllerImpl implements GameController {
         final Class<? extends Game> type = gameType.type();
         System.out.println("Loading Game: " + type);
 
-        final File file = new File(this.plugin.getDataFolder(), type.getSimpleName() + ".json");
+        final File file = gameType.gameFile();
         final Class<? extends AbstractGame> abstractType = (Class<? extends AbstractGame>) type;
 
         if (!file.exists()) {
@@ -114,63 +128,67 @@ public final class GameControllerImpl implements GameController {
         try (final JsonReader reader = new JsonReader(new FileReader(file))) {
             final Injector gameInjector = this.createGameInjector(abstractType);
             final AbstractGame abstractGame = gameInjector.getInstance(abstractType);
-            final Gson gson = new GsonBuilder()
+
+            final GsonBuilder builder = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .setPrettyPrinting()
-                .serializeNulls()
-                .registerTypeAdapter(
-                    PHASE_LIST_TYPE,
-                    new IdentifiableListDeserializer<AbstractGame, AbstractPhase>(gameInjector, abstractGame, FEATURE_LIST_TYPE) {
-                        @Override
-                        protected AbstractPhase createChild(Injector parentInjector, AbstractGame parent, Class<? extends AbstractPhase> childType) {
-                            return loadPhase(parentInjector, childType, false);
-                        }
+                .serializeNulls();
 
-                        @Override
-                        protected List<AbstractPhase> getList(AbstractGame parent) {
-                            return parent.abstractPhases();
-                        }
+            //TODO: register type adapters here!
 
-                        @Override
-                        protected JsonDeserializer<?> next(AbstractPhase parent) {
-                            return new IdentifiableListDeserializer<AbstractPhase, AbstractFeature>(gameInjector, parent, CONDITION_LIST_TYPE) {
-                                @Override
-                                protected AbstractFeature createChild(Injector parentInjector, AbstractPhase parent, Class<? extends AbstractFeature> childType) {
-                                    return parent.createFeature(childType);
-                                }
-
-                                @Override
-                                protected List<AbstractFeature> getList(AbstractPhase parent) {
-                                    return parent.abstractFeatures();
-                                }
-
-                                @Override
-                                protected JsonDeserializer<?> next(AbstractFeature parent) {
-                                    return new IdentifiableListDeserializer<AbstractFeature, AbstractVictoryCondition>(gameInjector, parent, null) {
-                                        @Override
-                                        protected AbstractVictoryCondition createChild(Injector parentInjector, AbstractFeature parent, Class<? extends AbstractVictoryCondition> childType) {
-                                            if (!(parent instanceof WinDetectionFeature winDetectionFeature)) {
-                                                return null;
-                                            }
-                                            return winDetectionFeature.createVictoryCondition(childType);
-                                        }
-
-                                        @Override
-                                        protected List<AbstractVictoryCondition> getList(AbstractFeature parent) {
-                                            if (!(parent instanceof WinDetectionFeature winDetectionFeature)) {
-                                                return null;
-                                            }
-                                            return winDetectionFeature.abstractVictoryConditions();
-                                        }
-                                    };
-                                }
-                            };
-                        }
+            builder.registerTypeAdapter(
+                PHASE_LIST_TYPE,
+                new IdentifiableListDeserializer<AbstractGame, AbstractPhase>(gameInjector, builder, abstractGame, FEATURE_LIST_TYPE) {
+                    @Override
+                    protected AbstractPhase createChild(Injector parentInjector, AbstractGame parent, Class<? extends AbstractPhase> childType) {
+                        return loadPhase(parentInjector, childType, false);
                     }
-                )
-                .registerTypeAdapter(abstractType, (InstanceCreator<AbstractGame>) t -> abstractGame)
-                .create();
 
+                    @Override
+                    protected List<AbstractPhase> getList(AbstractGame parent) {
+                        return parent.abstractPhases();
+                    }
+
+                    @Override
+                    protected JsonDeserializer<?> next(AbstractPhase parent) {
+                        return new IdentifiableListDeserializer<AbstractPhase, AbstractFeature>(gameInjector, builder, parent, CONDITION_LIST_TYPE) {
+                            @Override
+                            protected AbstractFeature createChild(Injector parentInjector, AbstractPhase parent, Class<? extends AbstractFeature> childType) {
+                                return parent.createFeature(childType);
+                            }
+
+                            @Override
+                            protected List<AbstractFeature> getList(AbstractPhase parent) {
+                                return parent.abstractFeatures();
+                            }
+
+                            @Override
+                            protected JsonDeserializer<?> next(AbstractFeature parent) {
+                                return new IdentifiableListDeserializer<AbstractFeature, AbstractVictoryCondition>(gameInjector, builder, parent, null) {
+                                    @Override
+                                    protected AbstractVictoryCondition createChild(Injector parentInjector, AbstractFeature parent, Class<? extends AbstractVictoryCondition> childType) {
+                                        if (!(parent instanceof WinDetectionFeature winDetectionFeature)) {
+                                            return null;
+                                        }
+                                        return winDetectionFeature.createVictoryCondition(childType);
+                                    }
+
+                                    @Override
+                                    protected List<AbstractVictoryCondition> getList(AbstractFeature parent) {
+                                        if (!(parent instanceof WinDetectionFeature winDetectionFeature)) {
+                                            return null;
+                                        }
+                                        return winDetectionFeature.abstractVictoryConditions();
+                                    }
+                                };
+                            }
+                        };
+                    }
+                }
+            );
+            builder.registerTypeAdapter(abstractType, (InstanceCreator<AbstractGame>) t -> abstractGame);
+
+            final Gson gson = builder.create();
             final AbstractGame game = gson.fromJson(reader, abstractType);
             this.games.add(game);
             System.out.println("Loaded Game from file: " + game);
@@ -215,7 +233,7 @@ public final class GameControllerImpl implements GameController {
 
     public void startDefaultGame() {
         if (this.config.defaultGame() != null && !this.config.defaultGame().equals("none")) {
-            Optional<GameType> type = this.gameTypes.stream().filter(gameMode -> gameMode.name().equalsIgnoreCase(this.config.defaultGame())).findAny();
+            Optional<GameType> type = this.gameTypes.values().stream().filter(gameMode -> gameMode.name().equalsIgnoreCase(this.config.defaultGame())).findAny();
             if (type.isPresent()) {
                 GameType gameType = type.get();
                 this.defaultGame = this.startGame(gameType);
@@ -239,14 +257,24 @@ public final class GameControllerImpl implements GameController {
     }
 
     private Injector createGameInjector(Class<? extends AbstractGame> type) {
-        GameInfo gameInfo = type.getAnnotation(GameInfo.class);
-        ResourceBundle.Control control = new FileJsonResourceLoader(this.plugin.getDataFolder());
-        MessageFormatTranslationProvider translationProvider = MessageFormatTranslationProvider
+        Optional<Map.Entry<AbstractGamePlugin, GameType>> optional = this.gameTypes.entrySet().stream().filter(gType -> gType.getValue().type().equals(type)).findFirst();
+        if (optional.isEmpty()) {
+            throw new RuntimeException();
+        }
+
+        final Map.Entry<AbstractGamePlugin, GameType> entry = optional.get();
+        final AbstractGamePlugin gamePlugin = entry.getKey();
+        final GameType gameType = entry.getValue();
+        final Injector injector = gamePlugin.injector();
+        final GameInfo gameInfo = type.getAnnotation(GameInfo.class);
+        final ResourceBundle.Control control = new FileJsonResourceLoader(gamePlugin, gameType.dataFolder());
+        final MessageFormatTranslationProvider translationProvider = MessageFormatTranslationProvider
             .builder()
             .addBundle(ResourceBundle.getBundle(gameInfo.name(), Locale.ENGLISH, control))
             .build();
-        MiniMessageComponentRenderer renderer = new MiniMessageComponentRenderer(translationProvider);
-        return this.injector.createChildInjector(new AbstractModule() {
+        final MiniMessageComponentRenderer renderer = new MiniMessageComponentRenderer(translationProvider);
+
+        return injector.createChildInjector(new AbstractModule() {
             @Override
             protected void configure() {
                 this.bind(MiniMessageComponentRenderer.class).toInstance(renderer);

@@ -8,30 +8,29 @@ import com.google.inject.name.Named;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 
 public class ConfigLoader {
 
     private final Gson gson;
-    private final File configFile;
 
     private final GlobalConfig globalConfig;
 
     @Inject
     public ConfigLoader(Gson gson, @Named("ConfigFile") File configFile) {
         this.gson = gson;
-        this.configFile = configFile;
-        if (!configFile.exists()) {
-            this.globalConfig = new GlobalConfig();
-            this.save(configFile, this.globalConfig);
-        } else {
-            this.globalConfig = this.load(configFile, GlobalConfig.class);
-        }
+        this.globalConfig = this.load(configFile, new GlobalConfig());
     }
 
-    public <T> T load(File configFile, Class<T> type) {
+    public <T> T load(File configFile, T defaultConfig) {
+        if (!configFile.exists()) {
+            this.save(configFile, defaultConfig);
+            return defaultConfig;
+        }
+
         try (JsonReader reader = new JsonReader(new FileReader(configFile))) {
-            return gson.fromJson(reader, type);
+            return gson.fromJson(reader, defaultConfig.getClass());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

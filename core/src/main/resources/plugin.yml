@@ -1,0 +1,6 @@
+name: GameCore
+description: The game core
+version: 1.0.0-SNAPSHOT
+authors:
+    - dasdrolpi
+main: de.drolpi.gamecore.GameCorePlugin

@@ -14,12 +14,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public final class GamePlayerListener implements Listener {
 
-    private final GameController gameController;
     private final GamePlayerHandlerImpl gamePlayerHandler;
 
     @Inject
-    public GamePlayerListener(GameController gameController, GamePlayerHandlerImpl gamePlayerHandler) {
-        this.gameController = gameController;
+    public GamePlayerListener(GamePlayerHandlerImpl gamePlayerHandler) {
         this.gamePlayerHandler = gamePlayerHandler;
     }
 

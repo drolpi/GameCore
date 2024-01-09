@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import de.drolpi.gamecore.components.world.map.DefinitionTypeAdapter;
@@ -41,10 +42,10 @@ public class WorldHandler {
     private final List<String> loadedWorlds = new ArrayList<>();
 
     @Inject
-    public WorldHandler(@Named("WorldsFolder") File worldsFolder, @Named("WorldContainer") File worldContainer) {
+    public WorldHandler(Injector injector, @Named("WorldsFolder") File worldsFolder, @Named("WorldContainer") File worldContainer) {
         this.worldsFolder = worldsFolder;
         this.worldContainer = worldContainer;
-        this.mapInfoStorage = new JsonMapInfoStorage();
+        this.mapInfoStorage = injector.getInstance(JsonMapInfoStorage.class);
         this.mapInfoStorage.load();
         this.gson = new GsonBuilder()
             .setPrettyPrinting()

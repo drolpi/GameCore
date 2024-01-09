@@ -1,4 +1,4 @@
-package de.drolpi.gamecore.api.task;
+package de.drolpi.gamecore.internal.task;
 
 public enum LifeCycle {
 

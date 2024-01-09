@@ -13,15 +13,18 @@ import com.google.inject.Injector;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class IdentifiableListDeserializer<T, U extends AbstractIdentifiable> implements JsonDeserializer<List<U>> {
 
     private final Injector parentInjector;
+    private final GsonBuilder builder;
     private final T parent;
     private final Type childListType;
 
-    public IdentifiableListDeserializer(Injector parentInjector, T parent, Type childListType) {
+    public IdentifiableListDeserializer(Injector parentInjector, GsonBuilder builder, T parent, Type childListType) {
         this.parentInjector = parentInjector;
+        this.builder = builder;
         this.parent = parent;
         this.childListType = childListType;
     }
@@ -45,28 +48,17 @@ public abstract class IdentifiableListDeserializer<T, U extends AbstractIdentifi
 
             try {
                 Class<? extends U> type = (Class<? extends U>) Class.forName(typeName);
-                U child = this.createChild(parentInjector, parent, type);
+                U child = this.createChild(this.parentInjector, this.parent, type);
 
-                GsonBuilder builder = new GsonBuilder()
-                    .excludeFieldsWithoutExposeAnnotation()
-                    .setPrettyPrinting()
-                    .serializeNulls()
-                    .registerTypeAdapter(type, new InstanceCreator<U>() {
-                        @Override
-                        public U createInstance(Type t) {
-                            return child;
-                        }
-                    });
+                this.builder.registerTypeAdapter(type, (InstanceCreator<U>) t -> child);
 
                 JsonDeserializer<?> typeAdapter = this.next(child);
 
                 if (typeAdapter != null) {
-                    builder.registerTypeAdapter(this.childListType, typeAdapter);
+                    this.builder.registerTypeAdapter(this.childListType, typeAdapter);
                 }
 
-                Gson gson = builder.create();
-
-                gson.fromJson(object, type);
+                this.builder.create().fromJson(object, type);
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }

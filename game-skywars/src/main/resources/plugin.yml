@@ -4,3 +4,5 @@ version: 1.0.0-SNAPSHOT
 authors:
     - dasdrolpi
 main: de.drolpi.skywars.SkyWarsPlugin
+depend:
+    - GameCore

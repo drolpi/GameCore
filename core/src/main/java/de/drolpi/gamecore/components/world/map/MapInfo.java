@@ -9,12 +9,12 @@ public class MapInfo {
     @Expose
     private String worldName;
     @Expose
-    private String gameType;
+    private String[] gameTypes;
 
-    public MapInfo(String name, String worldName, String gameType) {
+    public MapInfo(String name, String worldName, String... gameTypes) {
         this.name = name;
         this.worldName = worldName;
-        this.gameType = gameType;
+        this.gameTypes = gameTypes;
     }
 
     public String name() {
@@ -25,7 +25,7 @@ public class MapInfo {
         return this.worldName;
     }
 
-    public String gameType() {
-        return this.gameType;
+    public String[] gameTypes() {
+        return this.gameTypes;
     }
 }

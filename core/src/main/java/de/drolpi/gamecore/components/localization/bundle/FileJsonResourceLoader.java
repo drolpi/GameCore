@@ -4,14 +4,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,10 +25,13 @@ public final class FileJsonResourceLoader extends ResourceBundle.Control {
 
     private static final String FORMAT_NAME = "natrox.json";
 
+    private final Plugin plugin;
     private final File resourceDirectory;
 
-    public FileJsonResourceLoader(File resourceDirectory) {
-        this.resourceDirectory = resourceDirectory;
+    public FileJsonResourceLoader(Plugin plugin, File dataFolder) {
+        this.plugin = plugin;
+        this.resourceDirectory = new File(dataFolder, "languages");
+        boolean ignored = this.resourceDirectory.mkdirs();
     }
 
     @Override
@@ -44,7 +48,7 @@ public final class FileJsonResourceLoader extends ResourceBundle.Control {
             File file = new File(this.resourceDirectory, resName);
 
             if (!file.exists()) {
-                try (InputStream in = loader.getResourceAsStream(resName)) {
+                try (InputStream in = this.plugin.getClass().getClassLoader().getResourceAsStream(resName)) {
                     if (in == null) {
                         throw new IllegalArgumentException("Resource file " + resName + " does not exist");
                     }
@@ -73,7 +77,7 @@ public final class FileJsonResourceLoader extends ResourceBundle.Control {
     private ResourceBundle createBundle(InputStream source) {
         Map<String, MessageFormat[]> entries = new HashMap<>();
 
-        try (JsonReader reader = new JsonReader(new InputStreamReader(source,"UTF-8"))) {
+        try (JsonReader reader = new JsonReader(new InputStreamReader(source, StandardCharsets.UTF_8))) {
             JsonElement el = JsonParser.parseReader(reader);
             if (!el.isJsonObject()) {
                 throw new IllegalArgumentException("JSON resource files must have JSON object root");

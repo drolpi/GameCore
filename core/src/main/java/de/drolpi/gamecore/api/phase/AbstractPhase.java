@@ -42,6 +42,7 @@ public abstract class AbstractPhase extends AbstractIdentifiable implements Phas
     }
 
     public void enable() {
+        System.out.println("asd");
         for (AbstractFeature feature : this.features) {
             feature.enable();
             this.pluginManager.registerEvents(feature, this.plugin);

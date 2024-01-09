@@ -1,4 +1,4 @@
-package de.drolpi.gamecore.api.task;
+package de.drolpi.gamecore.internal.task;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
