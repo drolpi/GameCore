@@ -141,6 +141,7 @@ public class WorldHandler {
         if (world == null) {
             throw new RuntimeException();
         }
+        world.setKeepSpawnInMemory(false);
         world.setAutoSave(false);
         return world;
     }
