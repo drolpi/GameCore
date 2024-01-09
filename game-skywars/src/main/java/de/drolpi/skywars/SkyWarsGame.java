@@ -21,7 +21,7 @@ import de.drolpi.gamecore.api.phase.def.ProtectionPhase;
 import de.drolpi.gamecore.api.phase.def.StartingPhase;
 import de.drolpi.gamecore.components.team.config.Team;
 import de.drolpi.gamecore.components.team.config.TeamColor;
-import org.bukkit.boss.BarColor;
+import net.kyori.adventure.bossbar.BossBar;
 
 @GameInfo(name = "SkyWarsGame", description = "The SkyWars game", version = "1.0.0-SNAPSHOT", authors = {"dasdrolpi"})
 public final class SkyWarsGame extends AbstractGame {
@@ -70,7 +70,7 @@ public final class SkyWarsGame extends AbstractGame {
 
         //TODO: fix
         BossBarFeature bossBarFeature = protectionPhase.createFeature(BossBarFeature.class);
-        bossBarFeature.setColor(BarColor.GREEN);
+        bossBarFeature.setColor(BossBar.Color.GREEN);
         protectionPhase.createFeature(BossBarCounterFeature.class);
 
         WinDetectionFeature protectionWinDetectionFeature = protectionPhase.createFeature(WinDetectionFeature.class);

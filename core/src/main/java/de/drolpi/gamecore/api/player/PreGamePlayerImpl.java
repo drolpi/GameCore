@@ -1,5 +1,6 @@
 package de.drolpi.gamecore.api.player;
 
+import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -33,6 +34,16 @@ class PreGamePlayerImpl implements GamePlayer {
 
     @Override
     public void showTitle(Title title, TagResolver... resolvers) {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void showBossBar(BossBar bossBar, TagResolver... resolvers) {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void hideBossBar(BossBar bossBar) {
         throw new RuntimeException();
     }
 

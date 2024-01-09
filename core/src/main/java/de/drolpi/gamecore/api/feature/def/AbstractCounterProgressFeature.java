@@ -2,22 +2,16 @@ package de.drolpi.gamecore.api.feature.def;
 
 import com.google.inject.Inject;
 import de.drolpi.gamecore.api.counter.Counter;
-import de.drolpi.gamecore.api.counter.HandlerType;
 import de.drolpi.gamecore.api.player.GamePlayer;
 import de.drolpi.gamecore.api.event.GameJoinEvent;
-import de.drolpi.gamecore.api.feature.AbstractFeature;
 import de.drolpi.gamecore.api.game.Game;
 import de.drolpi.gamecore.api.phase.Phase;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
-import java.util.function.Consumer;
-
 public abstract class AbstractCounterProgressFeature extends AbstractCounterHandlerFeature {
 
     private final Game game;
-
-    private boolean countUp;
 
     @Inject
     public AbstractCounterProgressFeature(Game game, Phase phase) {
@@ -28,7 +22,6 @@ public abstract class AbstractCounterProgressFeature extends AbstractCounterHand
     @Override
     public void enable() {
         super.enable();
-        this.countUp = this.counterFeature.stopCount() > this.counterFeature.startCount();
     }
 
     @EventHandler
@@ -39,7 +32,7 @@ public abstract class AbstractCounterProgressFeature extends AbstractCounterHand
             return;
         }
 
-        this.setStart(player, counter);
+        this.reset(player, counter);
     }
 
     @Override
@@ -57,7 +50,7 @@ public abstract class AbstractCounterProgressFeature extends AbstractCounterHand
     @Override
     protected void cancel(Counter counter) {
         for (final GamePlayer player : this.game.allPlayers()) {
-            this.setStart(player.player(), counter);
+            this.reset(player.player(), counter);
         }
     }
 
@@ -67,16 +60,20 @@ public abstract class AbstractCounterProgressFeature extends AbstractCounterHand
     }
 
     protected float progress(Counter counter) {
-        return counter.currentCount() / (this.startCount(counter) + 0.0F);
+        return (float) (counter.currentCount() - this.lowerBound(counter)) / (this.upperBound(counter) - this.lowerBound(counter));
     }
 
-    protected long startCount(Counter counter) {
-        return this.countUp ? counter.stopCount() : counter.startCount();
+    protected long upperBound(Counter counter) {
+        return Math.max(counter.startCount(), counter.stopCount());
     }
 
-    protected void setStart(Player player, Counter counter) {
-        this.set(player, (int) this.startCount(counter), this.countUp ? 0 : 1);
+    protected long lowerBound(Counter counter) {
+        return Math.min(counter.startCount(), counter.stopCount());
     }
 
-    protected abstract void set(Player player, int count, float progress);
+    protected void reset(Player player, Counter counter) {
+        this.set(player, counter.startCount(), counter.startCount() > counter.stopCount() ? 1F : 0F);
+    }
+
+    protected abstract void set(Player player, long count, float progress);
 }

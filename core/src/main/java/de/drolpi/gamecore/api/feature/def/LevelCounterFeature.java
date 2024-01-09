@@ -18,8 +18,8 @@ public class LevelCounterFeature extends AbstractCounterProgressFeature {
     }
 
     @Override
-    protected void set(Player player, int count, float progress) {
-        player.setLevel(count);
+    protected void set(Player player, long count, float progress) {
+        player.setLevel((int) count);
         if (!this.levelProgress)
             return;
 
