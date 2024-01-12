@@ -1,5 +1,6 @@
 package de.drolpi.gamecore.api.player;
 
+import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -17,6 +18,10 @@ public interface GamePlayer {
     void sendMessage(Component component, TagResolver... resolvers);
 
     void showTitle(Title title, TagResolver... resolvers);
+
+    void showBossBar(String bossBarId, BossBar headBossBar, TagResolver... resolvers);
+
+    void hideBossBar(String bossBarId, BossBar headBossBar);
 
     void playSound(Sound sound);
 }

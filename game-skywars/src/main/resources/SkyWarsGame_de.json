@@ -16,6 +16,8 @@
     "starting.counter_finish_subtitle": "",
     "protection.counter_tick_message": "<key:prefix><gray>Die Schutzzeit endet in <yellow><count> <gray><key:unit.seconds>",
     "protection.counter_finish_message": "<key:prefix><gray>Die Schutzzeit ist nun vorbei",
+    "protection.bossbar.counter": "<red>Der Schutzzeit-Countdown läuft noch nicht.",
+    "protection.counter_bossbar": "<red>Die Schutzzeit dauert noch <yellow><count><red> Sekunden",
     "ingame.counter_tick_message": "<key:prefix><gray>Das Spiel endet in <yellow><count> <gray><key:unit.minutes>",
     "ingame.counter_finish_message": "<key:prefix><gray>Das Spiel endet nun",
     "ingame.death_private": "<key:prefix><red>Du bist gestorben",
