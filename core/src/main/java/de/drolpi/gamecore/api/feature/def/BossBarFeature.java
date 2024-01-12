@@ -13,151 +13,181 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.event.EventHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class BossBarFeature extends AbstractFeature {
 
     private final Game game;
 
-    private final Map<BossBar, BossBarInfo> bossBars;
-    private final Component defaultName;
+    @Expose
+    private final List<BossBarInfo> bossBarInfos;
+
+    private final Map<String, BossBarContainer> bossBars;
+
+    private final Phase phase;
+
 
     @Inject
     public BossBarFeature(Game game, Phase phase) {
         this.game = game;
-        this.defaultName = Component.translatable(phase.key() + "bossbar_name");
         this.bossBars = new HashMap<>();
+        this.bossBarInfos = new ArrayList<>();
+        this.phase = phase;
     }
 
     @Override
     public void enable() {
-        for (GamePlayer gamePlayer : this.game.players()) {
-            for (BossBarInfo info : bossBars.values()) {
-                gamePlayer.showBossBar(info.bossbar, info.resolvers);
-            }
+        for (BossBarInfo info : this.bossBarInfos) {
+            this.showForAll(info.id);
         }
     }
 
     @Override
     public void disable() {
-        for (GamePlayer gamePlayer : this.game.players()) {
-            for (BossBar bossBar : bossBars.keySet()) {
-                gamePlayer.hideBossBar(bossBar);
-            }
+        for (BossBarInfo info : this.bossBarInfos) {
+            this.hideForAll(info.id);
         }
+    }
+
+    public void register(String id, BossBar.Color color, BossBar.Overlay overlay) {
+        this.bossBarInfos.add(new BossBarInfo(id, color, overlay));
+        this.generateContainer(id);
+        this.showForAll(id);
     }
 
     @EventHandler
     public void handle(GameJoinEvent event) {
-        for (BossBarInfo info : bossBars.values()) {
-            event.gamePlayer().showBossBar(info.bossbar, info.resolvers);
+        for (BossBarInfo info : this.bossBarInfos) {
+            BossBarContainer container = this.getContainer(info.id);
+            if (container.hidden)
+                continue;
+            event.gamePlayer().showBossBar(info.id, container.bossBar, container.resolvers);
         }
     }
 
     @EventHandler
     public void handle(GamePostLeaveEvent event) {
-        for (BossBar bossBar : bossBars.keySet()) {
-            event.gamePlayer().hideBossBar(bossBar);
+
+    }
+
+    private void showForAll(String id) {
+        BossBarContainer container = this.getContainer(id);
+        for (GamePlayer gamePlayer : this.game.players()) {
+            gamePlayer.showBossBar(id, container.bossBar);
         }
     }
 
-    public BossBar.Color color(BossBar bossBar) {
-        return this.bossBars.get(bossBar).color;
+    private void hideForAll(String id) {
+        BossBarContainer container = this.getContainer(id);
+        for (GamePlayer gamePlayer : this.game.players()) {
+            gamePlayer.hideBossBar(id, container.bossBar);
+        }
     }
 
-    public BossBar.Overlay overlay(BossBar bossBar) {
-        return this.bossBars.get(bossBar).overlay;
+    public boolean hidden(String id) {
+        return this.getContainer(id).hidden;
     }
 
-    public void setProgress(BossBar bossBar, float progress) {
-        this.bossBars.get(bossBar).progress(progress);
+    public void setHidden(String id, boolean hidden) {
+        this.getContainer(id).hidden = hidden;
+        if (hidden) {
+            hideForAll(id);
+            return;
+        }
+        showForAll(id);
     }
 
-    public void setName(BossBar bossBar, Component name) {
-        this.bossBars.get(bossBar).name(name);
+    public boolean isRegistered(String id) {
+        return this.getInfo(id) != null;
     }
 
-    public void resetName(BossBar bossBar) {
-        this.bossBars.get(bossBar).name(this.defaultName);
+    public BossBar.Color color(String id) {
+        return this.getInfo(id).color;
     }
 
-    public void setColor(BossBar bossBar, BossBar.Color color) {
-        this.bossBars.get(bossBar).color(color);
+    public BossBar.Overlay overlay(String id) {
+        return this.getInfo(id).overlay;
     }
 
-    public void setResolvers(BossBar bossbar, TagResolver... resolvers) {
-        this.bossBars.get(bossbar).resolvers = resolvers;
+    public float progress(String id) {
+        return this.getContainer(id).bossBar.progress();
     }
 
-    public void setOverlay(BossBar bossBar, BossBar.Overlay overlay) {
-        this.bossBars.get(bossBar).overlay(overlay);
+    public void setProgress(String id, float progress) {
+        this.getContainer(id).bossBar.progress(progress);
     }
 
-    public void addBossBar(BossBar bossBar) {
-        this.bossBars.put(bossBar, new BossBarInfo(bossBar.color(), bossBar.overlay(), bossBar));
+    public void setColor(String id, BossBar.Color color) {
+        this.getInfo(id).color = color;
+        this.getContainer(id).bossBar.color(color);
     }
 
-    public void removeBossBar(BossBar bossBar) {
-        this.bossBars.remove(bossBar);
+    public void setOverlay(String id, BossBar.Overlay overlay) {
+        this.getInfo(id).overlay = overlay;
+        this.getContainer(id).bossBar.overlay(overlay);
     }
 
-    public static class BossBarInfo {
+    public void setName(String id, Component name) {
+        this.getContainer(id).bossBar.name(name);
+    }
 
+    public void setResolvers(String id, TagResolver... resolvers) {
+        this.getContainer(id).resolvers = resolvers;
+    }
+
+    public void resetName(String id) {
+        this.getContainer(id).bossBar.name(BossBarContainer.name(this.phase.key(), id));
+    }
+
+    public BossBarInfo getInfo(String id) {
+        Optional<BossBarInfo> bossBarInfo = this.bossBarInfos.stream().filter((info) -> info.id.equals(id)).findFirst();
+        return bossBarInfo.orElse(null);
+    }
+
+    private BossBarContainer getContainer(String id) {
+        BossBarContainer container = this.bossBars.get(id);
+        if (container != null) return container;
+        return this.generateContainer(id);
+
+    }
+
+    private BossBarContainer generateContainer(String id) {
+        System.out.println("Generating container");
+        BossBarInfo info = this.getInfo(id);
+        System.out.println("for info: "+info);
+        BossBarContainer container = new BossBarContainer(info, this.phase.key());
+        this.bossBars.put(id, container);
+        return container;
+    }
+
+    private static class BossBarInfo {
+
+        @Expose
+        private final String id;
         @Expose
         private BossBar.Color color;
         @Expose
         private BossBar.Overlay overlay;
-        @Expose
+
+        private BossBarInfo(String id, BossBar.Color color, BossBar.Overlay overlay) {
+            this.id = id;
+            this.color = color;
+            this.overlay = overlay;
+        }
+    }
+    
+    private static class BossBarContainer {
+        
+        private final BossBar bossBar;
         private TagResolver[] resolvers;
+        private boolean hidden = false;
 
-        private final BossBar bossbar;
-
-        public BossBarInfo(BossBar.Color color, BossBar.Overlay overlay, BossBar bossbar) {
-            this.color = color;
-            this.overlay = overlay;
-            this.bossbar = bossbar;
-            this.resolvers = new TagResolver[]{};
+        private BossBarContainer(BossBarInfo info, String phaseId) {
+            this.bossBar = BossBar.bossBar(BossBarContainer.name(phaseId, info.id), 1.0F, info.color, info.overlay);
         }
 
-        public BossBar.Color color() {
-            return this.color;
-        }
-
-        public BossBar.Overlay overlay() {
-            return this.overlay;
-        }
-
-        public BossBar bossbar() {
-            return this.bossbar;
-        }
-
-        public TagResolver[] resolvers() {
-            return this.resolvers;
-        }
-
-        public Component name() {
-            return this.bossbar.name();
-        }
-
-        public void progress(float progress) {
-            this.bossbar.progress(progress);
-        }
-
-        public void name(Component name) {
-            this.bossbar.name(name);
-        }
-
-        public void color(BossBar.Color color) {
-            this.color = color;
-        }
-
-        public void overlay(BossBar.Overlay overlay) {
-            this.overlay = overlay;
-        }
-
-        public void resolvers(TagResolver[] resolvers) {
-            this.resolvers = resolvers;
+        private static Component name(String phaseId, String bossBarId) {
+            return Component.translatable(phaseId + "bossbar." + bossBarId);
         }
     }
 }

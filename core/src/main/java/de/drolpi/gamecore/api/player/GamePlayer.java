@@ -19,9 +19,9 @@ public interface GamePlayer {
 
     void showTitle(Title title, TagResolver... resolvers);
 
-    void showBossBar(BossBar bossBar, TagResolver... resolvers);
+    void showBossBar(String bossBarId, BossBar headBossBar, TagResolver... resolvers);
 
-    void hideBossBar(BossBar bossBar);
+    void hideBossBar(String bossBarId, BossBar headBossBar);
 
     void playSound(Sound sound);
 }

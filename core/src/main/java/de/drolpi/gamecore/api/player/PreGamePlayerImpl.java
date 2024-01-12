@@ -38,12 +38,12 @@ class PreGamePlayerImpl implements GamePlayer {
     }
 
     @Override
-    public void showBossBar(BossBar bossBar, TagResolver... resolvers) {
+    public void showBossBar(String bossBarId, BossBar headBossBar, TagResolver... resolvers) {
         throw new RuntimeException();
     }
 
     @Override
-    public void hideBossBar(BossBar bossBar) {
+    public void hideBossBar(String bossBarId, BossBar headBossBar) {
         throw new RuntimeException();
     }
 

@@ -1,6 +1,5 @@
 package de.drolpi.gamecore.api.player;
 
-import de.drolpi.gamecore.api.feature.def.BossBarFeature;
 import de.drolpi.gamecore.api.game.AbstractGame;
 import de.drolpi.gamecore.api.game.GameControllerImpl;
 import de.drolpi.gamecore.components.localization.adventure.MiniMessageComponentRenderer;
@@ -20,7 +19,7 @@ final class GamePlayerImpl extends PreGamePlayerImpl implements GamePlayer {
     private final Locale locale = Locale.GERMAN;
     private final GameControllerImpl gameController;
 
-    private final Map<BossBar, BossBarCopyListener> shownBossBars;
+    private final Map<String, BossBarCopyListener> shownBossBars;
 
     GamePlayerImpl(Player player, GameControllerImpl gameController) {
         super(player.getUniqueId());
@@ -69,7 +68,7 @@ final class GamePlayerImpl extends PreGamePlayerImpl implements GamePlayer {
     }
 
     @Override
-    public void showBossBar(BossBar bossBar, TagResolver... resolvers) {
+    public void showBossBar(String bossBarId, BossBar headBossBar, TagResolver... resolvers) {
         Set<AbstractGame> game = this.gameController.abstractGames(this, true);
         Optional<AbstractGame> optional = game.stream().findFirst();
         if (optional.isEmpty()) {
@@ -77,20 +76,20 @@ final class GamePlayerImpl extends PreGamePlayerImpl implements GamePlayer {
         }
 
         MiniMessageComponentRenderer renderer = optional.get().renderer();
-        Component name = renderer.render(bossBar.name(), this.locale, resolvers);
-        BossBar result = BossBar.bossBar(name, bossBar.progress(), bossBar.color(), bossBar.overlay());
+        Component name = renderer.render(headBossBar.name(), this.locale, resolvers);
+        BossBar result = BossBar.bossBar(name, headBossBar.progress(), headBossBar.color(), headBossBar.overlay());
         BossBarCopyListener copyListener = new BossBarCopyListener(result, renderer, locale, resolvers);
-        bossBar.addListener(copyListener);
-        this.shownBossBars.put(bossBar, copyListener);
+        headBossBar.addListener(copyListener);
+        this.shownBossBars.put(bossBarId, copyListener);
         this.player.showBossBar(result);
     }
 
     @Override
-    public void hideBossBar(BossBar bossBar) {
-        BossBarCopyListener listener = this.shownBossBars.get(bossBar);
+    public void hideBossBar(String bossBarId, BossBar headBossBar) {
+        BossBarCopyListener listener = this.shownBossBars.get(bossBarId);
         if (listener == null) return;
-        bossBar.removeListener(listener);
-        this.shownBossBars.remove(bossBar);
+        headBossBar.removeListener(listener);
+        this.shownBossBars.remove(bossBarId);
         this.player.hideBossBar(listener.copy());
     }
 
